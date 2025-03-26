@@ -6,35 +6,17 @@ namespace Async.Locks
     public interface IAsyncLock : IAsyncDisposable
     {
         /// <summary>
-        /// Asynchronously attempts to acquire the lock.
+        /// Asynchronously acquires the lock.
         /// </summary>
-        /// <param name="cancellationToken">Optional cancellation token.</param>
-        /// <returns>A task that represents the acquisition of the lock. The result of the task is a <see cref="Releaser"/> that releases the lock when disposed. If the lock is already acquired, the task result is <see langword="null"/>.</returns>
-        Task<IAsyncDisposable?> TryLockAsync(CancellationToken cancellationToken = default);
+        /// <param name="timeout">Optional timeout for acquiring the lock.</param>
+        /// <param name="cancellationToken">Optional cancellation token to cancel the operation.</param>
+        /// <returns>A <see cref="ValueTask"/> that represents the acquisition of the lock. The result of the task is an <see cref="IAsyncDisposable"/> that releases the lock when disposed.</returns>
+        ValueTask<IAsyncDisposable> LockAsync(TimeSpan? timeout = null, CancellationToken cancellationToken = default);
 
         /// <summary>
-        /// Event that is raised when the lock is acquired.
+        /// Asynchronously releases the lock.
         /// </summary>
-        event EventHandler LockAcquired;
-
-        /// <summary>
-        /// Event that is raised when the lock is released.
-        /// </summary>
-        event EventHandler LockReleased;
-
-        /// <summary>
-        /// Gets the total number of times the lock was acquired.
-        /// </summary>
-        long AcquisitionCount { get; }
-
-        /// <summary>
-        /// Gets the total number of times the lock was released.
-        /// </summary>
-        long ReleaseCount { get; }
-
-        /// <summary>
-        /// Releases the lock.
-        /// </summary>
-        internal void Release();
+        /// <returns>A <see cref="ValueTask"/> that represents the asynchronous operation.</returns>
+        ValueTask ReleaseAsync();
     }
 }
