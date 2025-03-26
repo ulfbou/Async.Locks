@@ -53,8 +53,16 @@ namespace Async.Locks
 
             CancellationTokenRegistration registration = linkedCts.Token.Register(() =>
             {
-                tcs.TrySetCanceled(linkedCts.Token); // Simplified cancellation
-                InvokeLockCancelled();
+                if (timeoutCts?.IsCancellationRequested ?? false)
+                {
+                    tcs.TrySetException(new TimeoutException("Lock acquisition timed out.")); // Throw TimeoutException
+                    InvokeLockTimeout();
+                }
+                else
+                {
+                    tcs.TrySetCanceled(linkedCts.Token);
+                    InvokeLockCancelled();
+                }
             }, useSynchronizationContext: false);
 
             try
