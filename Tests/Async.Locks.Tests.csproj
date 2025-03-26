@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<CoverletOutputFormat>json,cobertura</CoverletOutputFormat>
+		<CoverletOutputDirectory>$(MSBuildProjectDirectory)\TestResults</CoverletOutputDirectory>
+	</PropertyGroup>
+
+	<Target Name="RunTests" DependsOnTargets="Build">
+		<Exec Command="dotnet test --no-build" />
+	</Target>
+
+	<!-- Include coverlet.collector only in Debug configuration to enable code coverage analysis -->
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+		<PackageReference Include="coverlet.collector" Version="6.0.*" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="FluentAssertions" Version="8.*" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.*" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.*" />
+		<PackageReference Include="Moq" Version="4.20.72" />
+		<PackageReference Include="xunit" Version="2.9.2" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Src\Async.Locks.csproj" />
+	</ItemGroup>
+
+</Project>
