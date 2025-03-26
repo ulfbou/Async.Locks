@@ -37,32 +37,42 @@ namespace Async.Locks
         /// <inheritdoc />
         public virtual async ValueTask<IAsyncDisposable> LockAsync(TimeSpan? timeout = null, CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (Interlocked.CompareExchange(ref _isLocked, 1, 0) == 0)
             {
                 InvokeLockAcquired();
                 return new AsyncReleaser<IAsyncLock>(this);
             }
 
-            var tcs = new TaskCompletionSource<IAsyncDisposable>();
+            var tcs = new TaskCompletionSource<IAsyncDisposable>(TaskCreationOptions.RunContinuationsAsynchronously);
             _queueStrategy.Enqueue(tcs);
 
-            using (var timeoutCts = timeout.HasValue ? new CancellationTokenSource(timeout.Value) : null)
-            using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts?.Token ?? CancellationToken.None))
-            {
-                linkedCts.Token.Register(() =>
-                {
-                    if (timeoutCts?.IsCancellationRequested ?? false)
-                    {
-                        InvokeLockTimeout();
-                    }
-                    else
-                    {
-                        InvokeLockCancelled();
-                    }
-                    tcs.TrySetCanceled(linkedCts.Token);
-                }, useSynchronizationContext: false);
+            using var timeoutCts = timeout.HasValue ? new CancellationTokenSource(timeout.Value) : null;
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts?.Token ?? CancellationToken.None);
 
+            CancellationTokenRegistration registration = linkedCts.Token.Register(() =>
+            {
+                // Cancel all pending locks when token is triggered
+                while (_queueStrategy.TryDequeue(out var queuedTcs))
+                {
+                    queuedTcs!.TrySetCanceled(linkedCts.Token);
+                }
+
+                InvokeLockCancelled();
+            }, useSynchronizationContext: false);
+
+            try
+            {
                 return await tcs.Task.ConfigureAwait(false);
+            }
+            catch (TaskCanceledException)
+            {
+                throw new TaskCanceledException("The lock acquisition was canceled.");
+            }
+            finally
+            {
+                registration.Dispose();
             }
         }
 

@@ -3,11 +3,8 @@
 
 namespace Async.Locks
 {
-    namespace Async.Locks
+    public class AsyncLock : AsyncLockBase, IAsyncLock
     {
-        public class AsyncLock : AsyncLockBase, IAsyncLock
-        {
-            public AsyncLock(IAsyncLockQueueStrategy? queueStrategy = null) : base(queueStrategy) { }
-        }
+        public AsyncLock(IAsyncLockQueueStrategy? queueStrategy = null) : base(queueStrategy) { }
     }
 }
