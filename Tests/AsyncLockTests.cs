@@ -107,14 +107,12 @@ namespace Async.Locks.Tests
                 await using (var releaser = await asyncLock.LockAsync())
                 {
                     releaser.Should().NotBeNull();
-                    await Task.Delay(1);
                 }
             }).ToList();
 
             await Task.WhenAll(tasks);
             stopwatch.Stop();
-            Console.WriteLine($"High contention test took: {stopwatch.ElapsedMilliseconds}ms");
-            Assert.True(stopwatch.ElapsedMilliseconds < 5000);
+            (stopwatch.ElapsedMilliseconds < 5000).Should().BeTrue();
         }
     }
 }

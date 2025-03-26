@@ -45,7 +45,7 @@ namespace Async.Locks
                 return new AsyncReleaser<IAsyncLock>(this);
             }
 
-            var tcs = new TaskCompletionSource<IAsyncDisposable>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var tcs = new TaskCompletionSource<IAsyncDisposable>(); // Removed TaskCreationOptions.RunContinuationsAsynchronously
             _queueStrategy.Enqueue(tcs);
 
             using var timeoutCts = timeout.HasValue ? new CancellationTokenSource(timeout.Value) : null;
@@ -53,12 +53,7 @@ namespace Async.Locks
 
             CancellationTokenRegistration registration = linkedCts.Token.Register(() =>
             {
-                // Cancel all pending locks when token is triggered
-                while (_queueStrategy.TryDequeue(out var queuedTcs))
-                {
-                    queuedTcs!.TrySetCanceled(linkedCts.Token);
-                }
-
+                tcs.TrySetCanceled(linkedCts.Token); // Simplified cancellation
                 InvokeLockCancelled();
             }, useSynchronizationContext: false);
 
