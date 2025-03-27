@@ -3,16 +3,52 @@
 
 namespace Async.Locks
 {
-    using System;
-    using System.Threading;
-    using System.Threading.Tasks;
-
     /// <summary>
     /// A base class for implementing specialized asynchronous locks.
     /// </summary>
     public abstract class AsyncLockBase : IAsyncLock, IDisposable
     {
         private int _disposed;
+
+        /// <summary>
+        /// Occurs when the lock is acquired.
+        /// </summary>
+        public event Action? OnLockAcquired;
+
+        /// <summary>
+        /// Occurs when the lock is released.
+        /// </summary>
+
+        public event Action? OnLockReleased;
+        /// <summary>
+        /// Occurs when the lock acquisition times out.
+        /// </summary>
+
+        public event Action? OnLockTimeout;
+        /// <summary>
+        /// Occurs when the lock acquisition is canceled.
+        /// </summary>
+        public event Action? OnLockCancelled;
+
+        /// <summary>
+        /// Invokes the <see cref="OnLockAcquired"/> event.
+        /// </summary>
+        protected void InvokeLockAcquired() => OnLockAcquired?.Invoke();
+
+        /// <summary>
+        /// Invokes the <see cref="OnLockReleased"/> event.
+        /// </summary>
+        protected void InvokeLockReleased() => OnLockReleased?.Invoke();
+
+        /// <summary>
+        /// Invokes the <see cref="OnLockTimeout"/> event.
+        /// </summary>
+        protected void InvokeLockTimeout() => OnLockTimeout?.Invoke();
+
+        /// <summary>
+        /// Invokes the <see cref="OnLockCancelled"/> event.
+        /// </summary>
+        protected void InvokeLockCancelled() => OnLockCancelled?.Invoke();
 
         /// <summary>
         /// Asynchronously acquires the lock.
