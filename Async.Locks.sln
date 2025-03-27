@@ -14,6 +14,9 @@ Global
 		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Prototype|Any CPU = Prototype|Any CPU
+		Prototype|x64 = Prototype|x64
+		Prototype|x86 = Prototype|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
@@ -25,6 +28,12 @@ Global
 		{B89CFBD0-F79A-4E52-B070-547F114C63FC}.Debug|x64.Build.0 = Debug|Any CPU
 		{B89CFBD0-F79A-4E52-B070-547F114C63FC}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{B89CFBD0-F79A-4E52-B070-547F114C63FC}.Debug|x86.Build.0 = Debug|Any CPU
+		{B89CFBD0-F79A-4E52-B070-547F114C63FC}.Prototype|Any CPU.ActiveCfg = Prototype|Any CPU
+		{B89CFBD0-F79A-4E52-B070-547F114C63FC}.Prototype|Any CPU.Build.0 = Prototype|Any CPU
+		{B89CFBD0-F79A-4E52-B070-547F114C63FC}.Prototype|x64.ActiveCfg = Prototype|Any CPU
+		{B89CFBD0-F79A-4E52-B070-547F114C63FC}.Prototype|x64.Build.0 = Prototype|Any CPU
+		{B89CFBD0-F79A-4E52-B070-547F114C63FC}.Prototype|x86.ActiveCfg = Prototype|Any CPU
+		{B89CFBD0-F79A-4E52-B070-547F114C63FC}.Prototype|x86.Build.0 = Prototype|Any CPU
 		{B89CFBD0-F79A-4E52-B070-547F114C63FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B89CFBD0-F79A-4E52-B070-547F114C63FC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B89CFBD0-F79A-4E52-B070-547F114C63FC}.Release|x64.ActiveCfg = Release|Any CPU
@@ -37,6 +46,12 @@ Global
 		{8ED1283A-7810-4811-B016-ECDFA64C6121}.Debug|x64.Build.0 = Debug|Any CPU
 		{8ED1283A-7810-4811-B016-ECDFA64C6121}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{8ED1283A-7810-4811-B016-ECDFA64C6121}.Debug|x86.Build.0 = Debug|Any CPU
+		{8ED1283A-7810-4811-B016-ECDFA64C6121}.Prototype|Any CPU.ActiveCfg = Prototype|Any CPU
+		{8ED1283A-7810-4811-B016-ECDFA64C6121}.Prototype|Any CPU.Build.0 = Prototype|Any CPU
+		{8ED1283A-7810-4811-B016-ECDFA64C6121}.Prototype|x64.ActiveCfg = Prototype|Any CPU
+		{8ED1283A-7810-4811-B016-ECDFA64C6121}.Prototype|x64.Build.0 = Prototype|Any CPU
+		{8ED1283A-7810-4811-B016-ECDFA64C6121}.Prototype|x86.ActiveCfg = Prototype|Any CPU
+		{8ED1283A-7810-4811-B016-ECDFA64C6121}.Prototype|x86.Build.0 = Prototype|Any CPU
 		{8ED1283A-7810-4811-B016-ECDFA64C6121}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8ED1283A-7810-4811-B016-ECDFA64C6121}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8ED1283A-7810-4811-B016-ECDFA64C6121}.Release|x64.ActiveCfg = Release|Any CPU
