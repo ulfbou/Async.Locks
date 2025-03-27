@@ -6,6 +6,7 @@
 		<Nullable>enable</Nullable>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<IsPackable>false</IsPackable>
+		<Configurations>Debug;Release;Prototype</Configurations>
 	</PropertyGroup>
 
 	<PropertyGroup>
