@@ -16,7 +16,7 @@ namespace Async.Locks.Tests
         [Fact]
         public async Task HighContention_Performance()
         {
-            IAsyncLock asyncLock = new TestAsyncLock();
+            IAsyncLock asyncLock = new AsyncLock();
             int concurrentTasks = 1000;
             var stopwatch = Stopwatch.StartNew();
 

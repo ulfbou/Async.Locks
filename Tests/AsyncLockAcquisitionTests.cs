@@ -12,7 +12,7 @@ namespace Async.Locks.Tests
         [Fact]
         public async Task SingleThreaded_AcquireAndRelease_Success()
         {
-            IAsyncLock asyncLock = new TestAsyncLock();
+            IAsyncLock asyncLock = new AsyncLock();
 
             await using var releaser = await asyncLock.AcquireAsync();
 
@@ -22,7 +22,7 @@ namespace Async.Locks.Tests
         [Fact]
         public async Task SingleThreaded_AcquireAndRelease_MultipleTimes_Success()
         {
-            IAsyncLock asyncLock = new TestAsyncLock();
+            IAsyncLock asyncLock = new AsyncLock();
 
             for (int i = 0; i < 10; i++)
             {
@@ -35,7 +35,7 @@ namespace Async.Locks.Tests
         [Fact]
         public async Task MultiThreaded_ConcurrentAcquisition_Success()
         {
-            IAsyncLock asyncLock = new TestAsyncLock();
+            IAsyncLock asyncLock = new AsyncLock();
             int concurrentTasks = 100;
 
             var tasks = Enumerable.Range(0, concurrentTasks).Select(async _ =>

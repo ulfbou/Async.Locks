@@ -12,7 +12,7 @@ namespace Async.Locks.Tests
         [Fact]
         public async Task Exception_WithinCriticalSection_ReleasesLock()
         {
-            IAsyncLock asyncLock = new TestAsyncLock();
+            IAsyncLock asyncLock = new AsyncLock();
 
             try
             {
