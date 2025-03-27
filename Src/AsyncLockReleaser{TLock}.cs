@@ -6,15 +6,15 @@ namespace Async.Locks
     /// <summary>
     /// Represents a releaser that releases the lock when disposed.
     /// </summary>
-    public readonly struct AsyncReleaser<TLock> : IAsyncDisposable where TLock : IAsyncLock
+    public readonly struct AsyncLockReleaser<TLock> : IAsyncDisposable where TLock : IAsyncLock
     {
         private readonly TLock _asyncLock;
 
         /// <summary>
-        /// Initializes a new instance of the <see langword="readonly"/> <see cref="AsyncReleaser{TLock}"/> structure.
+        /// Initializes a new instance of the <see langword="readonly"/> <see cref="AsyncLockReleaser{TLock}"/> structure.
         /// </summary>
         /// <param name="asyncLock">The <see cref="IAsyncLock"/> to release.</param>
-        internal AsyncReleaser(TLock asyncLock)
+        internal AsyncLockReleaser(TLock asyncLock)
         {
             _asyncLock = asyncLock ?? throw new ArgumentNullException(nameof(asyncLock));
         }

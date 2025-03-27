@@ -52,7 +52,7 @@ namespace Async.Locks
                     {
                         _queueStrategy.TryDequeue(out _);
                         InvokeLockAcquired();
-                        return new AsyncReleaser<AsyncLock>(this);
+                        return new AsyncLockReleaser<AsyncLock>(this);
                     }
 
                     _queueStrategy.TryDequeue(out var dequeuedTcs);
@@ -70,7 +70,7 @@ namespace Async.Locks
                 await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
                 _queueStrategy.TryDequeue(out _);
                 InvokeLockAcquired();
-                return new AsyncReleaser<AsyncLock>(this);
+                return new AsyncLockReleaser<AsyncLock>(this);
             }
             catch (OperationCanceledException)
             {
@@ -96,7 +96,7 @@ namespace Async.Locks
 
             if (_queueStrategy.TryDequeue(out var nextTcs))
             {
-                nextTcs!.SetResult(new AsyncReleaser<AsyncLock>(this));
+                nextTcs!.SetResult(new AsyncLockReleaser<AsyncLock>(this));
             }
 
             InvokeLockReleased();
