@@ -3,99 +3,108 @@
 
 namespace Async.Locks
 {
+    using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// A base class for implementing specialized asynchronous locks.
     /// </summary>
-    /// <remarks>
-    /// Exposes extensibility hooks for diagnostics, cancellation, timeout, and custom queuing.
-    /// </remarks>
-    public abstract class AsyncLockBase : IAsyncLock
+    public abstract class AsyncLockBase : IAsyncLock, IDisposable
     {
-        protected readonly IAsyncLockQueueStrategy _queueStrategy;
-        protected int _isLocked;
-
-        public event Action? OnLockAcquired;
-        public event Action? OnLockReleased;
-        public event Action? OnLockTimeout;
-        public event Action? OnLockCancelled;
-
-        protected void InvokeLockAcquired() => OnLockAcquired?.Invoke();
-        protected void InvokeLockReleased() => OnLockReleased?.Invoke();
-        protected void InvokeLockTimeout() => OnLockTimeout?.Invoke();
-        protected void InvokeLockCancelled() => OnLockCancelled?.Invoke();
+        private int _disposed;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AsyncLockBase"/> class.
+        /// Asynchronously acquires the lock.
         /// </summary>
-        /// <param name="queueStrategy">Optional queue strategy to use.</param>
-        protected AsyncLockBase(IAsyncLockQueueStrategy? queueStrategy = null)
+        /// <param name="timeout">Optional timeout for acquiring the lock.</param>
+        /// <param name="cancellationToken">Optional cancellation token to cancel the operation.</param>
+        /// <returns>A <see cref="ValueTask{IAsyncDisposable}"/> that represents the acquisition of the lock. The result of the task is an <see cref="IAsyncDisposable"/> that releases the lock when disposed.</returns>
+        /// <exception cref="ObjectDisposedException">Thrown if the lock has been disposed.</exception>
+        public async ValueTask<IAsyncDisposable> AcquireAsync(TimeSpan? timeout = null, CancellationToken cancellationToken = default)
         {
-            _queueStrategy = queueStrategy ?? new FifoLockQueueStrategy();
-            _isLocked = 0;
+            if (Volatile.Read(ref _disposed) == 1)
+            {
+                throw new ObjectDisposedException(nameof(AsyncLockBase));
+            }
+
+            return await AcquireInternalAsync(timeout, cancellationToken).ConfigureAwait(false);
         }
 
-        /// <inheritdoc />
-        public virtual async ValueTask<IAsyncDisposable> LockAsync(TimeSpan? timeout = null, CancellationToken cancellationToken = default)
+        /// <summary>
+        /// Acquires the lock asynchronously.
+        /// </summary>
+        /// <param name="timeout">Optional timeout for acquiring the lock.</param>
+        /// <param name="cancellationToken">Optional cancellation token to cancel the operation.</param>
+        /// <returns>A <see cref="ValueTask{IAsyncDisposable}"/> that represents the acquisition of the lock.</returns>
+        protected abstract ValueTask<IAsyncDisposable> AcquireInternalAsync(TimeSpan? timeout, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Asynchronously releases the lock.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask"/> that represents the asynchronous operation.</returns>
+        /// <exception cref="ObjectDisposedException">Thrown if the lock has been disposed.</exception>
+        public ValueTask ReleaseAsync()
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            if (Interlocked.CompareExchange(ref _isLocked, 1, 0) == 0)
+            if (Volatile.Read(ref _disposed) == 1)
             {
-                InvokeLockAcquired();
-                return new AsyncReleaser<IAsyncLock>(this);
+                throw new ObjectDisposedException(nameof(AsyncLockBase));
             }
 
-            var tcs = new TaskCompletionSource<IAsyncDisposable>(); // Removed TaskCreationOptions.RunContinuationsAsynchronously
-            _queueStrategy.Enqueue(tcs);
+            return ReleaseInternalAsync();
+        }
 
-            using var timeoutCts = timeout.HasValue ? new CancellationTokenSource(timeout.Value) : null;
-            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts?.Token ?? CancellationToken.None);
+        /// <summary>
+        /// Releases the lock asynchronously.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask"/> that represents the asynchronous operation.</returns>
+        protected abstract ValueTask ReleaseInternalAsync();
 
-            CancellationTokenRegistration registration = linkedCts.Token.Register(() =>
+        /// <summary>
+        /// Disposes the lock asynchronously.
+        /// </summary>
+        /// <returns>A <see cref="ValueTask"/> that represents the asynchronous operation.</returns>
+        public virtual async ValueTask DisposeAsync()
+        {
+            if (Interlocked.CompareExchange(ref _disposed, 1, 0) == 0)
             {
-                if (timeoutCts?.IsCancellationRequested ?? false)
-                {
-                    tcs.TrySetException(new TimeoutException("Lock acquisition timed out.")); // Throw TimeoutException
-                    InvokeLockTimeout();
-                }
-                else
-                {
-                    tcs.TrySetCanceled(linkedCts.Token);
-                    InvokeLockCancelled();
-                }
-            }, useSynchronizationContext: false);
-
-            try
-            {
-                return await tcs.Task.ConfigureAwait(false);
+                Interlocked.Increment(ref _disposed);
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
             }
-            catch (TaskCanceledException)
+
+            await Task.Yield();
+        }
+
+        /// <summary>
+        /// Disposes the lock.
+        /// </summary>
+        public void Dispose()
+        {
+            if (Interlocked.CompareExchange(ref _disposed, 1, 0) == 0)
             {
-                throw new TaskCanceledException("The lock acquisition was canceled.");
-            }
-            finally
-            {
-                registration.Dispose();
+                Interlocked.Increment(ref _disposed);
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
             }
         }
 
-        /// <inheritdoc />
-        public virtual ValueTask ReleaseAsync()
+        /// <summary>
+        /// Disposes the lock.
+        /// </summary>
+        /// <param name="disposing">A boolean value indicating whether the method is being called from the Dispose method.</param>
+        protected abstract void Dispose(bool disposing);
+
+        /// <summary>
+        /// Finalizes the lock.
+        /// </summary>
+        ~AsyncLockBase()
         {
-            if (_queueStrategy.TryDequeue(out var nextTcs))
+            if (Interlocked.CompareExchange(ref _disposed, 1, 0) == 0)
             {
-                InvokeLockAcquired();
-                nextTcs!.SetResult(new AsyncReleaser<IAsyncLock>(this));
-                InvokeLockReleased();
-                return ValueTask.CompletedTask;
+                Interlocked.Increment(ref _disposed);
+                Dispose(disposing: false);
             }
-
-            Interlocked.Exchange(ref _isLocked, 0);
-            InvokeLockReleased();
-            return ValueTask.CompletedTask;
         }
-
-        /// <inheritdoc />
-        public virtual ValueTask DisposeAsync() => ValueTask.CompletedTask;
     }
 }
