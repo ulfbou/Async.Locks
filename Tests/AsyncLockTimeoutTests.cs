@@ -1,10 +1,7 @@
-﻿using FluentAssertions;
+﻿// Copyright (c) Async Framework projects. All rights reserved.
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FluentAssertions;
 
 using Xunit;
 
@@ -12,41 +9,87 @@ namespace Async.Locks.Tests
 {
     public class AsyncLockTimeoutTests
     {
+        private const int TestTimeoutMilliseconds = 100;
+        private const int MaxTimeoutMilliseconds = 10000;
+
         [Fact]
         public async Task LockAsync_Timeout_Expires_ThrowsTimeoutException()
         {
-            // Arrange
-            IAsyncLock asyncLock = new AsyncLock();
+            IAsyncLock asyncLock = new TestAsyncLock();
             var timeout = TimeSpan.FromMilliseconds(100);
+            var releaser = await asyncLock.AcquireAsync();
 
-            // Acquire the lock to ensure the next attempt will timeout
-            var releaser = await asyncLock.LockAsync();
+            var exception = await Record.ExceptionAsync(async () => await asyncLock.AcquireAsync(timeout: timeout).TimeoutAfter(TimeSpan.FromMilliseconds(MaxTimeoutMilliseconds)));
 
-            // Act
-            var exception = await Record.ExceptionAsync(async () => await asyncLock.LockAsync(timeout: timeout));
-
-            // Assert
             exception.Should().BeOfType<TimeoutException>();
         }
 
         [Fact]
         public async Task LockAsync_Timeout_DoesNotExpire_Success()
         {
-            // Arrange
-            IAsyncLock asyncLock = new AsyncLock();
+            IAsyncLock asyncLock = new TestAsyncLock();
             var timeout = TimeSpan.FromMilliseconds(100);
 
-            // Acquire and release the lock
-            await using (var releaser = await asyncLock.LockAsync())
+
+            await using (await asyncLock.AcquireAsync())
             {
-                releaser.Should().NotBeNull();
+                await Task.Delay(50);
             }
 
-            // Act
-            var exception = await Record.ExceptionAsync(async () => await asyncLock.LockAsync(timeout: timeout));
+            var exception = await Record.ExceptionAsync(async () => await asyncLock.AcquireAsync(timeout: timeout));
 
-            // Assert
             exception.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task LockAsync_ZeroLengthTimeout_ThrowsTimeoutException()
+        {
+            IAsyncLock asyncLock = new TestAsyncLock();
+            var timeout = TimeSpan.Zero;
+            var releaser = await asyncLock.AcquireAsync();
+
+            var exception = await Record.ExceptionAsync(async () => await asyncLock.AcquireAsync(timeout: timeout).TimeoutAfter(TimeSpan.FromMilliseconds(MaxTimeoutMilliseconds)));
+
+            exception.Should().BeOfType<TimeoutException>();
+        }
+
+        [Fact]
+        public async Task LockAsync_VeryShortTimeout_ThrowsTimeoutException()
+        {
+            IAsyncLock asyncLock = new TestAsyncLock();
+            var timeout = TimeSpan.FromMilliseconds(1);
+            var releaser = await asyncLock.AcquireAsync();
+
+            var exception = await Record.ExceptionAsync(async () => await asyncLock.AcquireAsync(timeout: timeout).TimeoutAfter(TimeSpan.FromMilliseconds(MaxTimeoutMilliseconds)));
+
+            exception.Should().BeOfType<TimeoutException>();
+        }
+
+        [Fact]
+        public async Task LockAsync_VeryLongTimeout_Success()
+        {
+            IAsyncLock asyncLock = new TestAsyncLock();
+            var timeout = TimeSpan.FromMinutes(1);
+
+            await using (await asyncLock.AcquireAsync())
+            {
+
+            }
+
+            var exception = await Record.ExceptionAsync(async () => await asyncLock.AcquireAsync(timeout: timeout));
+
+            exception.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task LockAsync_NegativeTimeout_ThrowsArgumentOutOfRangeException()
+        {
+            IAsyncLock asyncLock = new TestAsyncLock();
+            var timeout = TimeSpan.FromMilliseconds(-1);
+
+            var exception = await Record.ExceptionAsync(async () => await asyncLock.AcquireAsync(timeout: timeout).TimeoutAfter(TimeSpan.FromMilliseconds(MaxTimeoutMilliseconds)));
+
+            exception.Should().BeOfType<ArgumentOutOfRangeException>();
         }
     }
 }
