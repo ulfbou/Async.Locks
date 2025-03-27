@@ -26,9 +26,14 @@
 		<NoWarn>$(NoWarn);NU5125</NoWarn>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<Copyright>Copyright (c) Async Framework projects. All rights reserved. Licensed under the MIT License. See LICENSE in the project root for license information.</Copyright>
-		<DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+		<DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
 		<Configurations>Debug;Release;Prototype</Configurations>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<Version>0.1.0-dev</Version>
@@ -58,10 +63,6 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 		<PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" Condition="'$(TargetFramework)' == 'net9.0'" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<None Include="..\README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 </Project>
