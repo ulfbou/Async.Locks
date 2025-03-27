@@ -1,0 +1,27 @@
+<Project>
+	<PropertyGroup>
+		<AssemblyTitle>Async.Locks</AssemblyTitle>
+		<AssemblyDescription>A library providing asynchronous locking primitives for .NET.</AssemblyDescription>
+		<AssemblyCompany>Async Framework projects</AssemblyCompany>
+		<AssemblyProduct>Async.Locks</AssemblyProduct>
+		<AssemblyCopyright>Copyright (c) Async Framework projects. All rights reserved.</AssemblyCopyright>
+		<AssemblyCulture>neutral</AssemblyCulture>
+		<MajorVersion>0</MajorVersion>
+		<MinorVersion>1</MinorVersion>
+		<PatchVersion>0</PatchVersion>
+		<AssemblyVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</AssemblyVersion>
+		<AssemblyFileVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).0</AssemblyFileVersion>
+		<AssemblyInformationalVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</AssemblyInformationalVersion>
+		<InternalsVisibleTo>Async.Locks.Tests</InternalsVisibleTo>
+		<DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<Optimize>false</Optimize>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<Optimize>true</Optimize>
+	</PropertyGroup>
+
+</Project>
