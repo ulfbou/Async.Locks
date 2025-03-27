@@ -3,6 +3,9 @@
 
 namespace Async.Locks
 {
+    /// <summary>
+    /// Represents an asynchronous lock that can be used to synchronize access to a resource.
+    /// </summary>
     public interface IAsyncLock : IAsyncDisposable
     {
         /// <summary>
