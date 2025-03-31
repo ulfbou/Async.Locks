@@ -1,27 +1,72 @@
 <Project>
+	<!-- Shared Properties for All Projects -->
 	<PropertyGroup>
 		<AssemblyTitle>Async.Locks</AssemblyTitle>
 		<AssemblyDescription>A library providing asynchronous locking primitives for .NET.</AssemblyDescription>
 		<AssemblyCompany>Async Framework projects</AssemblyCompany>
 		<AssemblyProduct>Async.Locks</AssemblyProduct>
-		<AssemblyCopyright>Copyright (c) Async Framework projects. All rights reserved.</AssemblyCopyright>
+		<AssemblyCopyright>Copyright (c) Async Framework projects</AssemblyCopyright>
 		<AssemblyCulture>neutral</AssemblyCulture>
-		<MajorVersion>0</MajorVersion>
-		<MinorVersion>1</MinorVersion>
-		<PatchVersion>0</PatchVersion>
-		<AssemblyVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</AssemblyVersion>
-		<AssemblyFileVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).0</AssemblyFileVersion>
-		<AssemblyInformationalVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</AssemblyInformationalVersion>
+
+		<!-- GitVersion-based Versioning -->
+		<Version>$(GitVersion_AssemblySemVer)</Version>
+		<AssemblyVersion>$(GitVersion_AssemblySemVer)</AssemblyVersion>
+		<FileVersion>$(GitVersion_AssemblySemVer).0</FileVersion>
+		<AssemblyInformationalVersion>$(GitVersion_InformationalVersion)</AssemblyInformationalVersion>
+
+		<!-- Build & Packaging -->
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/ulfbou/Async.Locks</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/ulfbou/Async.Locks</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>async; lock; synchronization; semaphore; threading; concurrency</PackageTags>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<Deterministic>true</Deterministic>
+		<EmbedUntrustedSources>true</EmbedUntrustedSources>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<IncludeSymbols>true</IncludeSymbols>
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<NoWarn>$(NoWarn);NU5125</NoWarn>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<InternalsVisibleTo>Async.Locks.Tests</InternalsVisibleTo>
-<!--		 -->
 	</PropertyGroup>
 
+	<!-- DEBUG Configuration -->
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
 		<Optimize>false</Optimize>
+		<DebugType>portable</DebugType>
+		<DebugSymbols>true</DebugSymbols>
+		<DefineConstants>$(DefineConstants);DEBUG;TEST</DefineConstants>
 	</PropertyGroup>
 
+	<!-- RELEASE Configuration -->
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<Optimize>true</Optimize>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
+		<DebugType>none</DebugType>
 	</PropertyGroup>
 
+	<!-- PROTOTYPE Configuration -->
+	<PropertyGroup Condition="'$(Configuration)' == 'Prototype'">
+		<Optimize>true</Optimize>
+		<VersionSuffix>-prototype</VersionSuffix>
+		<Version>$(GitVersion_AssemblySemVer)$(VersionSuffix)</Version>
+		<AssemblyVersion>$(Version.Replace('-', '.')).0</AssemblyVersion>
+		<FileVersion>$(Version.Replace('-', '.')).0</FileVersion>
+		<DefineConstants>$(DefineConstants);PROFILING</DefineConstants>
+	</PropertyGroup>
+
+	<!-- Code Coverage Tool -->
+	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
+		<PackageReference Include="coverlet.collector" Version="6.0.*" />
+	</ItemGroup>
 </Project>
