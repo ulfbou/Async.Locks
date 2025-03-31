@@ -18,12 +18,8 @@
 		<Exec Command="dotnet test --no-build" />
 	</Target>
 
-	<!-- Include coverlet.collector only in Debug configuration to enable code coverage analysis -->
-	<ItemGroup Condition="'$(Configuration)' == 'Debug'">
-		<PackageReference Include="coverlet.collector" Version="6.0.*" />
-	</ItemGroup>
-
 	<ItemGroup>
+		<!-- Test dependencies -->
 		<PackageReference Include="FluentAssertions" Version="8.*" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.*" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.*" />
@@ -33,6 +29,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<!-- Reference to main project -->
 		<ProjectReference Include="..\Src\Async.Locks.csproj" />
 	</ItemGroup>
 
