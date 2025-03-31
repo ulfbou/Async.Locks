@@ -29,6 +29,7 @@
 		<DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
 		<Configurations>Debug;Release;Prototype</Configurations>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<DocumentationFile>$(MSBuildProjectDirectory)/../Docs/$(AssemblyName).xml</DocumentationFile>
 	</PropertyGroup>
 
 	<ItemGroup>

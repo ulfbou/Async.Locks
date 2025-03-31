@@ -13,7 +13,7 @@
 		<AssemblyFileVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion).0</AssemblyFileVersion>
 		<AssemblyInformationalVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</AssemblyInformationalVersion>
 		<InternalsVisibleTo>Async.Locks.Tests</InternalsVisibleTo>
-		<DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
+<!--		 -->
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">

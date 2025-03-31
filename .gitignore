@@ -400,3 +400,5 @@ FodyWeavers.xsd
 *.sln.iml
 *.env
 /Src/diff
+/Docs/Async.Locks.xml
+/Tests/.xml
