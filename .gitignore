@@ -402,3 +402,5 @@ FodyWeavers.xsd
 /Src/diff
 /Docs/Async.Locks.xml
 /Tests/.xml
+gitversion.json
+gitversion.props
