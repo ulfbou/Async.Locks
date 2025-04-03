@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -53,7 +53,7 @@ jobs:
         run: dotnet run --project Async.Locks.Benchmarks/Async.Locks.Benchmarks.csproj --configuration Release -f net9.0
 
       - name: Analyze benchmark results
-        run: pwsh ./build/analyze-benchmarks.ps1
+        run: ./scripts/ubuntu/analyze-benchmarks.sh
 
   publish:
     needs: build_and_test
@@ -63,7 +63,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -82,7 +82,7 @@ jobs:
         run: dotnet restore Async.Locks.sln
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-artifacts
           path: Async.Locks/bin/Release/net9.0/
