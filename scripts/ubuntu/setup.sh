@@ -1,4 +1,6 @@
 #!/bin/bash
+chmod +x "$0"
+
 # Install dependencies
 sudo apt-get update
 sudo apt-get install -y jq
