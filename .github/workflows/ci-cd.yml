@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 
+          fetch-depth: 0 # Required for GitVersion
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -44,12 +44,12 @@ jobs:
   publish:
     needs: build_and_test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' 
+    if: github.ref == 'refs/heads/main' # Only run on main branch
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          fetch-depth: 0 # Required for GitVersion
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
@@ -63,4 +63,4 @@ jobs:
         run: dotnet pack Async.Locks/Async.Locks.csproj --configuration Release --output .
 
       - name: Publish NuGet package
-        run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }} # Access the secret here.
