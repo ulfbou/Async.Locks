@@ -35,7 +35,7 @@ jobs:
         run: dotnet build Async.Locks.sln --configuration Release
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: Async.Locks/bin/Release/net9.0/
@@ -44,7 +44,7 @@ jobs:
         run: dotnet test Async.Locks.Tests/Async.Locks.Tests.csproj --configuration Release --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger:"trx;LogFileName=test-results.trx" -- DataCollectionRunSettings.DataCollectors.DataCollector.FriendlyName="XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover -p:Parallelize=true
 
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: ./TestResults
