@@ -13,7 +13,8 @@ namespace Async.Locks
         /// Enqueues a task completion source representing a lock acquisition request.
         /// </summary>
         /// <param name="tcs">The task completion source to enqueue.</param>
-        void Enqueue(TaskCompletionSource<IAsyncDisposable> tcs);
+        /// <param name="priority">The priority of the request. Default is 0.</param>
+        void Enqueue(TaskCompletionSource<IAsyncDisposable> tcs, int priority = 0);
 
         /// <summary>
         /// Attempts to dequeue a task completion source representing a lock acquisition request.

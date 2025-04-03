@@ -15,7 +15,7 @@ namespace Async.Locks
         private readonly ConcurrentQueue<TaskCompletionSource<IAsyncDisposable>> _queue = new();
 
         /// <inheritdoc />
-        public void Enqueue(TaskCompletionSource<IAsyncDisposable> tcs)
+        public void Enqueue(TaskCompletionSource<IAsyncDisposable> tcs, int priority = 0)
         {
             lock (_queue)
             {
