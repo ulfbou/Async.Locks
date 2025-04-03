@@ -15,7 +15,13 @@ dotnet tool install --global GitVersion.Tool
 echo "Verifying jq installation..."
 jq --version || { echo "jq installation failed"; exit 1; }
 
+# Try running gitversion with /version
 echo "Verifying GitVersion installation..."
-dotnet gitversion --version || { echo "GitVersion installation failed"; exit 1; }
+dotnet gitversion /version || {
+    echo "GitVersion /version failed, trying current directory"
+    dotnet gitversion . /version || {
+        echo "GitVersion installation failed"; exit 1;
+    }
+}
 
 echo "Setup complete."
