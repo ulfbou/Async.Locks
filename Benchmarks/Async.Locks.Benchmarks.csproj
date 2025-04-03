@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<IsPackable>false</IsPackable>
+		<Configurations>Debug;Release;Prototype</Configurations>
+		<OutputType>Exe</OutputType>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+	<Target Name="RunBenchmarks" DependsOnTargets="Build">
+		<Exec Command="dotnet run -c Release --project $(MSBuildThisFileDirectory)Async.Locks.Benchmarks.csproj" />
+	</Target>
+
+	<ItemGroup>
+		<!-- Benchmarking dependencies -->
+		<PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Reference to main project -->
+		<ProjectReference Include="..\Src\Async.Locks.csproj" />
+	</ItemGroup>
+
+</Project>
