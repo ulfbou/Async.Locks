@@ -1,0 +1,66 @@
+name: Async.Locks CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore Async.Locks.sln
+
+      - name: Build project
+        run: dotnet build Async.Locks.sln --configuration Release
+
+      - name: Run unit tests
+        run: dotnet test Async.Locks.Tests/Async.Locks.Tests.csproj --configuration Release --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger:"trx;LogFileName=test-results.trx" -- DataCollectionRunSettings.DataCollectors.DataCollector.FriendlyName="XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover -p:Parallelize=true
+
+      - name: Run benchmarks
+        run: dotnet run --project Async.Locks.Benchmarks/Async.Locks.Benchmarks.csproj --configuration Release -f net9.0
+
+      - name: Analyze benchmark results
+        run: pwsh ./build/analyze-benchmarks.ps1
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: ./TestResults
+
+  publish:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore Async.Locks.sln
+
+      - name: Pack NuGet package
+        run: dotnet pack Async.Locks/Async.Locks.csproj --configuration Release --output .
+
+      - name: Publish NuGet package
+        run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
