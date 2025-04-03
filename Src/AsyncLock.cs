@@ -20,7 +20,7 @@ namespace Async.Locks
         public AsyncLock(IAsyncLockQueueStrategy? queueStrategy = null)
         {
             _semaphore = new SemaphoreSlim(1, 1);
-            _queueStrategy = queueStrategy ?? new FifoLockQueueStrategy();
+            _queueStrategy = queueStrategy ?? new DefaultQueueStrategy();
         }
 
         /// <summary>
