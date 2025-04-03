@@ -16,7 +16,9 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Environment
-        run: ./scripts/ubuntu/setup.sh
+        run: |
+          chmod +x ./scripts/ubuntu/setup.sh
+          ./scripts/ubuntu/setup.sh
         shell: bash
 
       - name: Setup .NET
