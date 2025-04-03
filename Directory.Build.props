@@ -34,6 +34,11 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 
+	<PropertyGroup Condition=" '$(MSBuildProjectName)' == 'Async.Locks.Benchmarks' ">
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	</PropertyGroup>
+
 	<Target Name="GitVersion" BeforeTargets="Build">
 		<Exec Command="powershell.exe -ExecutionPolicy Bypass -File $(MSBuildThisFileDirectory)build/gitversion.ps1" />
 		<PropertyGroup>
