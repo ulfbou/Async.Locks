@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Parameters
 BENCHMARK_RESULTS_FILE="Async.Locks.Benchmarks/BenchmarkDotNet.Artifacts/results/Async.Lock.Benchmarks.AsyncLockBenchmarks-net9.0.json"
 REGRESSION_THRESHOLD=0.10 # 10%

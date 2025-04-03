@@ -40,7 +40,7 @@
 	</PropertyGroup>
 
 	<Target Name="GitVersion" BeforeTargets="Build">
-		<Exec Command="pwsh -ExecutionPolicy Bypass -File $(MSBuildThisFileDirectory)build/gitversion.ps1" />
+		<Exec Command="bash $(MSBuildThisFileDirectory)scripts/ubuntu/gitversion.sh" />
 		<PropertyGroup>
 			<MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileDirectory)gitversion.props</MSBuildAllProjects>
 		</PropertyGroup>

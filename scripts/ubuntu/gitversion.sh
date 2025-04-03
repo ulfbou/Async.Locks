@@ -1,4 +1,6 @@
-# Run GitVersion CLI and output properties to gitversion.props
+#!/bin/bash
+
+# Run GitVersion and output properties to gitversion.props
 gitversion_output=$(dotnet gitversion /output json)
 echo "AssemblyVersion=$(echo "$gitversion_output" | jq -r '.AssemblySemVer')" > gitversion.props
 echo "FileVersion=$(echo "$gitversion_output" | jq -r '.SemVer')" >> gitversion.props
