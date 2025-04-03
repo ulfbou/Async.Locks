@@ -53,7 +53,7 @@ jobs:
           path: ./gitversion.props
 
       - name: Run unit tests
-        run: dotnet test Async.Locks.Tests/Async.Locks.Tests.csproj --configuration Release --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger:"trx;LogFileName=test-results.trx" -- DataCollectionRunSettings.DataCollectors.DataCollector.FriendlyName="XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover -p:Parallelize=true
+        run: dotnet test Tests/Async.Locks.Tests.csproj --configuration Release --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger:"trx;LogFileName=test-results.trx" -- DataCollectionRunSettings.DataCollectors.DataCollector.FriendlyName="XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover -p:Parallelize=true
         continue-on-error: false
 
       - name: Upload test results
