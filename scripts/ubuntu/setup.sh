@@ -16,7 +16,6 @@ echo "Verifying jq installation..."
 jq --version || { echo "jq installation failed"; exit 1; }
 
 echo "Verifying GitVersion installation..."
-gitversion --version || { echo "GitVersion installation failed"; exit 1; }
+dotnet gitversion --version || { echo "GitVersion installation failed"; exit 1; }
 
 echo "Setup complete."
- 
