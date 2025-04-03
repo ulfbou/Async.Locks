@@ -15,6 +15,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Setup Environment
+        run: ./scripts/ubuntu/setup.sh
+        shell: bash
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
@@ -40,8 +44,15 @@ jobs:
           name: build-artifacts
           path: Async.Locks/bin/Release/net9.0/
 
+      - name: Upload GitVersion props
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitversion-props
+          path: ./gitversion.props
+
       - name: Run unit tests
         run: dotnet test Async.Locks.Tests/Async.Locks.Tests.csproj --configuration Release --collect:"XPlat Code Coverage" --results-directory ./TestResults --logger:"trx;LogFileName=test-results.trx" -- DataCollectionRunSettings.DataCollectors.DataCollector.FriendlyName="XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover -p:Parallelize=true
+        continue-on-error: false
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
@@ -52,13 +63,13 @@ jobs:
       - name: Run benchmarks
         run: dotnet run --project Async.Locks.Benchmarks/Async.Locks.Benchmarks.csproj --configuration Release -f net9.0
 
-      - name: Analyze benchmark results
-        run: ./scripts/ubuntu/analyze-benchmarks.sh
+      - name: Analyze Benchmark Results
+        run: ./scripts/ubuntu/analyze-benchmarks.sh Async.Locks.Benchmarks/BenchmarkDotNet.Artifacts/results
 
   publish:
     needs: build_and_test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: success() && github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -87,8 +98,13 @@ jobs:
           name: build-artifacts
           path: Async.Locks/bin/Release/net9.0/
 
+      - name: Download GitVersion props
+        uses: actions/download-artifact@v4
+        with:
+          name: gitversion-props
+
       - name: Pack NuGet package
-        run: dotnet pack Async.Locks/Async.Locks.csproj --configuration Release --output .
+        run: dotnet pack Async.Locks/Async.Locks.csproj --configuration Release --output . -p:Version=$(cat ./gitversion.props | grep AssemblyVersion | cut -d '=' -f2)
 
       - name: Publish NuGet package
         run: dotnet nuget push *.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.NUGET_API_KEY }}
