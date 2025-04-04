@@ -1,11 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
-  <DataCollectionRunSettings>
-    <DataCollectors>
-      <DataCollector friendlyName="XPlat Code Coverage">
-        <Configuration>
-          <Format>opencover</Format>
-        </Configuration>
-      </DataCollector>
-    </DataCollectors>
-  </DataCollectionRunSettings>
+	<RunConfiguration>
+		<ResultsDirectory>./TestResults</ResultsDirectory>
+		<MaxCpuCount>0</MaxCpuCount>
+		<SolutionDirectory>.</SolutionDirectory>
+		<CollectSourceInformation>True</CollectSourceInformation>
+	</RunConfiguration>
+	<DataCollectionRunSettings>
+		<DataCollectors>
+			<DataCollector friendlyName="XPlat Code Coverage">
+				<Configuration>
+					<Format>opencover</Format>
+				</Configuration>
+			</DataCollector>
+		</DataCollectors>
+	</DataCollectionRunSettings>
 </RunSettings>
