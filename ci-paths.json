@@ -1,0 +1,9 @@
+{
+  "buildOutputDir": "Src/bin/Release/net9.0",
+  "testResultsDir": "TestResults",
+  "gitVersionProps": "gitversion.props",
+  "benchmarksDir": "Benchmarks/Async.Locks.Benchmarks.csproj",
+  "benchmarkResultsDir": "Benchmarks/BenchmarkDotNet.Artifacts/results",
+  "testProject": "Tests/Async.Locks.Tests.csproj",
+  "srcProject": "Src/Async.Locks.csproj"
+}
