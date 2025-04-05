@@ -404,5 +404,5 @@ FodyWeavers.xsd
 /Tests/.xml
 gitversion.json
 gitversion.props
-local-ci/
-scripts/local/
+# local-ci/
+# scripts/local/

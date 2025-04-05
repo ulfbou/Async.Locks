@@ -4,8 +4,8 @@ set -e
 echo "Starting setup script..."
 
 # Install dependencies
-sudo apt-get update
-sudo apt-get install -y jq
+apt-get update
+apt-get install -y jq
 
 # Load paths from config file
 echo "Loading paths from ci-paths.json..."
@@ -16,14 +16,20 @@ export BENCHMARKS_DIR=$(jq -r '.benchmarksDir' ci-paths.json)
 export BENCHMARK_RESULTS_DIR=$(jq -r '.benchmarkResultsDir' ci-paths.json)
 export TEST_PROJECT=$(jq -r '.testProject' ci-paths.json)
 export SRC_PROJECT=$(jq -r '.srcProject' ci-paths.json)
+export UBUNTU_SCRIPTS_DIR=/github/workspace/scripts/ubuntu
+export PROJECT_ROOT=/github/workspace
+export SCRIPTS_DIR=/github/workspace/scripts
+
+# Clear .NET tools cache
+echo "Clearing .NET tools cache..."
+rm -rf ~/.dotnet/tools
 
 # Install GitVersion (latest stable)
 echo "Installing latest stable GitVersion..."
 dotnet tool install --global GitVersion.Tool
 
-# Install Coverlet Collector
-echo "Installing Coverlet Collector..."
-dotnet tool install --global coverlet.collector
+# Add .NET global tools to PATH within the current script
+export PATH="$PATH:/root/.dotnet/tools"
 
 # Verify installations
 echo "Verifying jq installation..."
@@ -37,9 +43,5 @@ dotnet gitversion /version || {
         echo "GitVersion installation failed"; exit 1;
     }
 }
-
-# Verify Coverlet installation
-echo "Verifying Coverlet installation..."
-dotnet tool list --global | grep coverlet.collector || { echo "Coverlet installation failed"; exit 1;}
 
 echo "Setup complete."

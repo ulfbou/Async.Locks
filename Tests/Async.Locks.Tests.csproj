@@ -17,6 +17,7 @@
 	<ItemGroup>
 		<!-- Test dependencies -->
 		<PackageReference Include="FluentAssertions" Version="8.*" />
+		<PackageReference Include="Microsoft.CodeCoverage" Version="17.13.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.*" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.*" />
 		<PackageReference Include="Moq" Version="4.20.72" />
