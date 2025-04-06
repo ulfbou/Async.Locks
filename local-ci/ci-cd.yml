@@ -28,18 +28,30 @@ jobs:
       - name: Add .NET Global Tools to PATH
         run: echo "::add-path::/root/.dotnet/tools"
 
+      - name: Get Version
+        run: |
+          cd /github/workspace
+          ${{ env.UBUNTU_SCRIPTS_DIR }}/gitversion.sh
+
       - name: Restore dependencies
-        run: dotnet msbuild ${{ env.PROJECT_ROOT }}/Async.Locks.sln /t:Restore
+        run: dotnet restore ${{ env.PROJECT_ROOT }}/Async.Locks.sln
+
+      - name: Clean project
+        run: dotnet clean ${{ env.PROJECT_ROOT }}/Async.Locks.sln --configuration Release
 
       - name: Build project
-        run: dotnet msbuild ${{ env.PROJECT_ROOT }}/Async.Locks.sln /p:Configuration=Release
-
-      - name: Get Version
-        run: ${{ env.UBUNTU_SCRIPTS_DIR }}/gitversion.sh
+        run: dotnet build ${{ env.PROJECT_ROOT }}/Async.Locks.sln --configuration Release
 
       - name: Run unit tests
         run: |
-          dotnet test ${{ env.TEST_PROJECT }} --configuration Release \
+          echo "Current working directory: $(pwd)"
+          ls -l /github/workspace
+          cd /github/workspace
+          echo "Current working directory after cd /github/workspace: $(pwd)"
+          ls -l Tests
+          cd Tests
+          echo "Current working directory after cd Tests: $(pwd)"
+          dotnet test --configuration Release \
             --logger:"trx;LogFileName=${{ env.TEST_RESULTS_DIR }}/test-results.trx" \
             --settings ${{ env.PROJECT_ROOT }}/codecoverage.runsettings
         continue-on-error: false
