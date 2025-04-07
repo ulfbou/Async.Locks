@@ -7,9 +7,9 @@ jobs:
     name: Build and Test
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/dotnet/sdk:9.0.202
+      image: ulfbou/dotnet-node:9.0
       volumes:
-        - C:/Users/Uffe/Source/repos/Async/Locks:/github/workspace
+        - C:/Users/Uffe/Source/repos/Async/Locks:${{ env.PROJECT_ROOT }}
 
     steps:
       - name: Checkout code

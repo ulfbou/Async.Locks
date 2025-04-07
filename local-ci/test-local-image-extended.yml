@@ -1,0 +1,41 @@
+name: Test Local Image Extended
+
+on: [push]
+
+env:
+  BUILD_CONFIGURATION: Release
+  DOTNET_VERSION: 9.0.x
+
+jobs:
+  build_and_test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    container:
+      image: ulfbou/dotnet-node:9.0
+      volumes:
+        - C:/Users/Uffe/Source/repos/Async/Locks:/github/workspace
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          path: /github/workspace
+          fetch-depth: 0
+
+      - name: "Debug: List contents"
+        run: ls -l /github/workspace
+
+      - name: Restore dependencies
+        working-directory: /github/workspace
+        run: dotnet restore ./Async.Locks.csproj
+
+      - name: Build
+        working-directory: /github/workspace
+        run: dotnet build Async.Locks.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-restore
+
+      - name: Test
+        working-directory: /github/workspace
+        run: dotnet test Tests/Async.Locks.Tests/Async.Locks.Tests.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --logger trx --results-directory TestResults
+
+      - name: Package
+        working-directory: /github/workspace
+        run: dotnet pack Async.Locks.csproj --configuration ${{ env.BUILD_CONFIGURATION }} --no-build --output build-output /p:PackageVersion=$(dotnet gitversion /nofetch /output json | jq -r '.AssemblySemVer')
