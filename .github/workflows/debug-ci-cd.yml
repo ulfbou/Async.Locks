@@ -37,3 +37,6 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore ${{ env.SLN_FILE }}
+
+      - name: Build project
+        run: dotnet build ${{ env.SLN_FILE }} --configuration Release --output ${{ env.BUILD_OUTPUT_DIR }}
