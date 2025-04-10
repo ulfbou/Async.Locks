@@ -1,4 +1,4 @@
-name: Async.Locks CI/CD
+name: Async.Locks Debugging CI/CD
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       TEST_DIR: /github/workspace/Tests
       TESTS_PROJECT_FILE: /github/workspace/Tests/Async.Locks.Tests.csproj
       BENCHMARKS_DIR: /github/workspace/Benchmarks
-      BENCHMARKS_PROJECT_FILE: /github/workspace/Benchmarks/Async.Locks.Benchmarks/Async.Locks.Benchmarks.csproj
+      BENCHMARKS_PROJECT_FILE: /github/workspace/Benchmarks/Async.Locks.Benchmarks.csproj
       BUILD_OUTPUT_DIR: /github/workspace/build-output
       TEST_RESULTS_DIR: /github/workspace/TestResults
       BENCHMARK_RESULTS_DIR: /github/workspace/benchmark-results
@@ -34,3 +34,6 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '9.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.SLN_FILE }}
