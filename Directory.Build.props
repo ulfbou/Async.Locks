@@ -11,8 +11,8 @@
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
 		<IncludeSymbols>true</IncludeSymbols>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<AssemblyVersion>$(AssemblySemVer)</AssemblyVersion>
-		<FileVersion>$(AssemblySemVer)</FileVersion>
+		<AssemblyVersion>$(MajorMinorPatch).0</AssemblyVersion>
+		<FileVersion>$(SemVer)</FileVersion>
 		<Version>$(SemVer)</Version>
 		<InformationalVersion>$(InformationalVersion)</InformationalVersion>
 	</PropertyGroup>
@@ -39,18 +39,6 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 
-	<Target Name="GitVersion" BeforeTargets="Build">
-		<Exec Command="bash $(MSBuildThisFileDirectory)scripts/ubuntu/gitversion.sh" />
-		<PropertyGroup>
-			<MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileDirectory)gitversion.props</MSBuildAllProjects>
-		</PropertyGroup>
-	</Target>
-
-	<PropertyGroup>
-		<AssemblyVersion>$(AssemblyVersion)</AssemblyVersion>
-		<FileVersion>$(FileVersion)</FileVersion>
-		<Version>$(Version)</Version>
-		<InformationalVersion>$(InformationalVersion)</InformationalVersion>
-	</PropertyGroup>
+	<Import Project="gitversion.props" Condition="Exists('gitversion.props')" />
 
 </Project>
