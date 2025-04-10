@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<IsPackable>false</IsPackable>
 		<Configurations>Debug;Release;Prototype</Configurations>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
 
 	<PropertyGroup>
