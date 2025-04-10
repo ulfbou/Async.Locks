@@ -41,6 +41,10 @@ jobs:
         run: dotnet tool restore
         working-directory: ${{ env.PROJECT_ROOT }}
 
+      - name: List .dotnet/tools directory (Debug)
+        run: ls -al .dotnet/tools
+        working-directory: ${{ env.PROJECT_ROOT }}
+
       - name: Print dotnet-tools.json (Debug)
         run: cat .config/dotnet-tools.json
         working-directory: ${{ env.PROJECT_ROOT }}
