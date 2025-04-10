@@ -407,3 +407,4 @@ gitversion.props
 # local-ci/
 # scripts/local/
 /build-output
+/local-ci/*
