@@ -5,6 +5,7 @@
 		<Configurations>Debug;Release;Prototype</Configurations>
 		<OutputType>Exe</OutputType>
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
 
 	<Target Name="RunBenchmarks" DependsOnTargets="Build">

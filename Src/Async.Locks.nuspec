@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
-  <metadata>
-    <id>Async.Locks</id>
-    <version>$(Version)</version>
-    <authors>Ulf Bourelius</authors>
-    <description>A library providing asynchronous locking primitives for .NET.</description>
-    <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <license type="expression">MIT</license>
-    <projectUrl>https://github.com/ulfbou/Async.Locks</projectUrl>
-    <repository url="https://github.com/ulfbou/Async.Locks" type="git" />
-    <tags>async; lock; synchronization; semaphore; threading; concurrency</tags>
-    <releaseNotes>See release notes at: https://github.com/ulfbou/Async.Locks/releases</releaseNotes>
-  </metadata>
-  <files>
-    <file src="bin\$(Configuration)\$(TargetFramework)\Async.Locks.dll" target="lib\$(TargetFramework)" />
-    <file src="..\README.md" target="\" />
-  </files>
+	<metadata>
+		<id>Async.Locks</id>
+		<version>$(Version)</version>
+		<authors>Ulf Bourelius</authors>
+		<description>A library providing asynchronous locking primitives for .NET.</description>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<license type="expression">MIT</license>
+		<projectUrl>https://github.com/ulfbou/Async.Locks</projectUrl>
+		<repository url="https://github.com/ulfbou/Async.Locks" type="git" />
+		<tags>async; lock; synchronization; semaphore; threading; concurrency</tags>
+		<releaseNotes>See release notes at: https://github.com/ulfbou/Async.Locks/releases</releaseNotes>
+	</metadata>
+	<files>
+		<file src="bin/Release/net9.0/Async.Locks.dll" target="lib/net9.0" />
+		<file src="..\README.md" target="\" />
+	</files>
 </package>

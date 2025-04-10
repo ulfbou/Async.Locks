@@ -10,17 +10,9 @@
 		<PackageTags>async; lock; synchronization; semaphore; threading; concurrency</PackageTags>
 		<PackageReleaseNotes>See release notes at: https://github.com/ulfbou/Async.Locks/releases</PackageReleaseNotes>
 		<OutputPath>bin\$(Configuration)\</OutputPath>
-		<NuspecFile>Async.Locks.nuspec</NuspecFile>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<IsPackable>true</IsPackable>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<None Include="..\README.md" Pack="true" PackagePath="\" />
-		<PackageReference Include="coverlet.collector" Version="6.0.4">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
-		<PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" Condition="'$(TargetFramework)' == 'net9.0'" />
-	</ItemGroup>
 
 </Project>
