@@ -408,3 +408,4 @@ gitversion.props
 # scripts/local/
 /build-output
 /local-ci/*
+/.config
