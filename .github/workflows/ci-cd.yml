@@ -1,4 +1,4 @@
-#name: Async.Locks CI/CD
+name: Async.Locks CI/CD
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
       TEST_DIR: /github/workspace/Tests
       TESTS_PROJECT_FILE: /github/workspace/Tests/Async.Locks.Tests.csproj
       BENCHMARKS_DIR: /github/workspace/Benchmarks
-      BENCHMARKS_PROJECT_FILE: /github/workspace/Benchmarks/Async.Locks.Benchmarks.csproj
+      BENCHMARKS_PROJECT_FILE: /github/workspace/Benchmarks/Async.Locks.Benchmarks/Async.Locks.Benchmarks.csproj
       BUILD_OUTPUT_DIR: /github/workspace/build-output
       TEST_RESULTS_DIR: /github/workspace/TestResults
       BENCHMARK_RESULTS_DIR: /github/workspace/benchmark-results
@@ -35,10 +35,19 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: List dotnet tools (Debug)
+        run: dotnet tool list --global
+
+      - name: Check PATH (Debug)
+        run: echo "Path $PATH"
+
       - name: Run GitVersion and Create gitversion.props
         id: gitversion
         run: |
+          echo "Running dotnet-gitversion..."
           gitversion_output="$("dotnet-gitversion" /output json)"
+          echo "Debug: GitVersion Output:"
+          echo "$gitversion_output"
           echo "##[set-output name=major]::$(echo "$gitversion_output" | jq -r '.Major')"
           echo "##[set-output name=minor]::$(echo "$gitversion_output" | jq -r '.Minor')"
           echo "##[set-output name=patch]::$(echo "$gitversion_output" | jq -r '.Patch')"
@@ -61,6 +70,7 @@ jobs:
           echo "</Project>" >> gitversion.props
 
           echo "Generated gitversion.props"
+        shell: bash
 
       - name: Upload GitVersion Props Artifact
         uses: actions/upload-artifact@v4
@@ -178,7 +188,7 @@ jobs:
       TEST_RESULTS_DIR: /github/workspace/TestResults
       BENCHMARK_RESULTS_DIR: /github/workspace/benchmark-results
       CODECOVERAGE_SETTINGS_FILE: /github/workspace/codecoverage.runsettings
-      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+#      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
