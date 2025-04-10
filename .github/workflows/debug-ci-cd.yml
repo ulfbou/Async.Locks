@@ -3,8 +3,10 @@ name: Async.Locks Debugging CI/CD
 on:
   push:
     branches:
-      - master
+      - development/github-workflows
   pull_request:
+    branches:
+      - development/github-workflows
 
 jobs:
   build:
@@ -35,8 +37,14 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: Restore dependencies
-        run: dotnet restore ${{ env.SLN_FILE }}
-
-      - name: Build project
-        run: dotnet build ${{ env.SLN_FILE }} --configuration Release --output ${{ env.BUILD_OUTPUT_DIR }}
+      - name: Run GitVersion
+        id: gitversion
+        run: |
+          gitversion_output="$("dotnet-gitversion" /output json)"
+          echo "##[set-output name=major]::$(echo "$gitversion_output" | jq -r '.Major')"
+          echo "##[set-output name=minor]::$(echo "$gitversion_output" | jq -r '.Minor')"
+          echo "##[set-output name=patch]::$(echo "$gitversion_output" | jq -r '.Patch')"
+          echo "##[set-output name=semver]::$(echo "$gitversion_output" | jq -r '.SemVer')"
+          echo "##[set-output name=informationalversion]::$(echo "$gitversion_output" | jq -r '.InformationalVersion')"
+          echo "##[set-output name=majorMinorPatch]::$(echo "$gitversion_output" | jq -r '.MajorMinorPatch')"
+        shell: bash
