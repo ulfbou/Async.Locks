@@ -37,6 +37,10 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: Create .NET Tool Manifest
+        run: dotnet new tool-manifest
+        working-directory: ${{ env.PROJECT_ROOT_DIR }}
+
       - name: Install GitVersion.Tool locally
         run: dotnet tool install --local GitVersion.Tool
 
