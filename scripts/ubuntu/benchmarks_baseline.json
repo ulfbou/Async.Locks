@@ -1,0 +1,177 @@
+{
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentQueue-100-ConcurrentEnqueueBenchmark": {
+    "Mean": 0.001,
+    "StandardDeviation": 0.0001,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentQueue-100-TimeoutEnforcementBenchmark": {
+    "Mean": 10.5,
+    "StandardDeviation": 0.2,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentQueue-100-MixedWorkloadBenchmark": {
+    "Mean": 0.005,
+    "StandardDeviation": 0.0005,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentQueue-100-BurstWorkloadBenchmark": {
+    "Mean": 0.01,
+    "StandardDeviation": 0.001,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentQueue-100-ExponentialPriorityBenchmark": {
+    "Mean": 0.015,
+    "StandardDeviation": 0.0015,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentQueue-100-QueueExhaustionBenchmark": {
+    "Mean": 5.0,
+    "StandardDeviation": 0.1,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentQueue-100-EmptyQueueBenchmark": {
+    "Mean": 0.0005,
+    "StandardDeviation": 0.00005,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentQueue-100-IdenticalPrioritiesBenchmark": {
+    "Mean": 0.002,
+    "StandardDeviation": 0.0002,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentQueue-100-FifoBenchmark": {
+    "Mean": 0.003,
+    "StandardDeviation": 0.0003,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentQueue-100-MixedPriorityFifoBenchmark": {
+    "Mean": 0.004,
+    "StandardDeviation": 0.0004,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentStack-100-ConcurrentEnqueueBenchmark": {
+    "Mean": 0.0012,
+    "StandardDeviation": 0.00012,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentStack-100-TimeoutEnforcementBenchmark": {
+    "Mean": 10.6,
+    "StandardDeviation": 0.22,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentStack-100-MixedWorkloadBenchmark": {
+    "Mean": 0.0055,
+    "StandardDeviation": 0.00055,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentStack-100-BurstWorkloadBenchmark": {
+    "Mean": 0.011,
+    "StandardDeviation": 0.0011,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentStack-100-ExponentialPriorityBenchmark": {
+    "Mean": 0.016,
+    "StandardDeviation": 0.0016,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentStack-100-QueueExhaustionBenchmark": {
+    "Mean": 5.1,
+    "StandardDeviation": 0.11,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentStack-100-EmptyQueueBenchmark": {
+    "Mean": 0.0006,
+    "StandardDeviation": 0.00006,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentStack-100-IdenticalPrioritiesBenchmark": {
+    "Mean": 0.0022,
+    "StandardDeviation": 0.00022,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentStack-100-FifoBenchmark": {
+    "Mean": 0.0032,
+    "StandardDeviation": 0.00032,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentStack-100-MixedPriorityFifoBenchmark": {
+    "Mean": 0.0042,
+    "StandardDeviation": 0.00042,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentBag-100-ConcurrentEnqueueBenchmark": {
+    "Mean": 0.0015,
+    "StandardDeviation": 0.00015,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentBag-100-TimeoutEnforcementBenchmark": {
+    "Mean": 10.7,
+    "StandardDeviation": 0.25,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentBag-100-MixedWorkloadBenchmark": {
+    "Mean": 0.006,
+    "StandardDeviation": 0.0006,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentBag-100-BurstWorkloadBenchmark": {
+    "Mean": 0.012,
+    "StandardDeviation": 0.0012,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentBag-100-ExponentialPriorityBenchmark": {
+    "Mean": 0.017,
+    "StandardDeviation": 0.0017,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentBag-100-QueueExhaustionBenchmark": {
+    "Mean": 5.2,
+    "StandardDeviation": 0.12,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentBag-100-EmptyQueueBenchmark": {
+    "Mean": 0.0007,
+    "StandardDeviation": 0.00007,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentBag-100-IdenticalPrioritiesBenchmark": {
+    "Mean": 0.0025,
+    "StandardDeviation": 0.00025,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentBag-100-FifoBenchmark": {
+    "Mean": 0.0035,
+    "StandardDeviation": 0.00035,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockQueueStrategyBenchmarks-ConcurrentBag-100-MixedPriorityFifoBenchmark": {
+    "Mean": 0.0045,
+    "StandardDeviation": 0.00045,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockBenchmarks-100-ConcurrentAcquireReleaseBenchmark": {
+    "Mean": 0.05,
+    "StandardDeviation": 0.005,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockBenchmarks-100-CancellationBenchmark": {
+    "Mean": 50.2,
+    "StandardDeviation": 1.0,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockBenchmarks-100-PartialCancellationBenchmark": {
+    "Mean": 50.1,
+    "StandardDeviation": 0.9,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockBenchmarks-100-ConcurrentCancellationBenchmark": {
+    "Mean": 50.3,
+    "StandardDeviation": 1.1,
+    "N": 20
+  },
+  "Async.Lock.Benchmarks.AsyncLockBenchmarks-100-MixedLockAcquisitionBenchmark": {
+    "Mean": 75.5,
+    "StandardDeviation": 2.0,
+    "N": 20
+  }
+}
