@@ -1,4 +1,4 @@
-name: Async.Locks CI/CD
+#name: Async.Locks CI/CD
 
 on:
   push:
@@ -11,21 +11,24 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ulfbou/dotnet-node:9.0
+    env:
+      PROJECT_ROOT: /github/workspace
+      SLN_FILE: ${{ env.PROJECT_ROOT }}/Async.Locks.sln
+      SRC_DIR: ${{ env.PROJECT_ROOT }}/Src
+      LOCKS_PROJECT_FILE: ${{ env.SRC_DIR }}/Async.Locks.csproj
+      TEST_DIR: ${{ env.PROJECT_ROOT }}/Tests
+      TESTS_PROJECT_FILE: ${{ env.TEST_DIR }}/Async.Locks.Tests.csproj
+      BENCHMARKS_DIR: ${{ env.PROJECT_ROOT }}/Benchmarks
+      BENCHMARKS_PROJECT_FILE: ${{ env.BENCHMARKS_DIR }}/Async.Locks.Benchmarks.csproj
+      BUILD_OUTPUT_DIR: ${{ env.PROJECT_ROOT }}/build-output
+      TEST_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/TestResults
+      BENCHMARK_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/benchmark-results
+      CODECOVERAGE_SETTINGS_FILE: ${{ env.PROJECT_ROOT }}/codecoverage.runsettings
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Load .env file
-        run: |
-          if [ -f /github/workspace/.env ]; then
-            . /github/workspace/.env
-            echo "Environment variables loaded (attempted manually)"
-            echo "PROJECT_ROOT: $PROJECT_ROOT"
-          else
-            echo ".env file not found, skipping."
-          fi
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
@@ -84,16 +87,30 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ulfbou/dotnet-node:9.0
+    env:
+      PROJECT_ROOT: /github/workspace
+      SLN_FILE: ${{ env.PROJECT_ROOT }}/Async.Locks.sln
+      SRC_DIR: ${{ env.PROJECT_ROOT }}/Src
+      LOCKS_PROJECT_FILE: ${{ env.SRC_DIR }}/Async.Locks.csproj
+      TEST_DIR: ${{ env.PROJECT_ROOT }}/Tests
+      TESTS_PROJECT_FILE: ${{ env.TEST_DIR }}/Async.Locks.Tests.csproj
+      BENCHMARKS_DIR: ${{ env.PROJECT_ROOT }}/Benchmarks
+      BENCHMARKS_PROJECT_FILE: ${{ env.BENCHMARKS_DIR }}/Async.Locks.Benchmarks.csproj
+      BUILD_OUTPUT_DIR: ${{ env.PROJECT_ROOT }}/build-output
+      TEST_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/TestResults
+      BENCHMARK_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/benchmark-results
+      CODECOVERAGE_SETTINGS_FILE: ${{ env.PROJECT_ROOT }}/codecoverage.runsettings
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Load .env file
-        uses: jpfulton/github-action-dotenv-load@v1
+      - name: Download GitVersion props artifact
+        uses: actions/download-artifact@v4
         with:
-          path: .env
+          name: gitversion-props
+          path: .
 
       - name: Run unit tests (Async.Locks.Tests)
         run: |
@@ -107,16 +124,30 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ulfbou/dotnet-node:9.0
+    env:
+      PROJECT_ROOT: /github/workspace
+      SLN_FILE: ${{ env.PROJECT_ROOT }}/Async.Locks.sln
+      SRC_DIR: ${{ env.PROJECT_ROOT }}/Src
+      LOCKS_PROJECT_FILE: ${{ env.SRC_DIR }}/Async.Locks.csproj
+      TEST_DIR: ${{ env.PROJECT_ROOT }}/Tests
+      TESTS_PROJECT_FILE: ${{ env.TEST_DIR }}/Async.Locks.Tests.csproj
+      BENCHMARKS_DIR: ${{ env.PROJECT_ROOT }}/Benchmarks
+      BENCHMARKS_PROJECT_FILE: ${{ env.BENCHMARKS_DIR }}/Async.Locks.Benchmarks.csproj
+      BUILD_OUTPUT_DIR: ${{ env.PROJECT_ROOT }}/build-output
+      TEST_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/TestResults
+      BENCHMARK_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/benchmark-results
+      CODECOVERAGE_SETTINGS_FILE: ${{ env.PROJECT_ROOT }}/codecoverage.runsettings
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Load .env file
-        uses: jpfulton/github-action-dotenv-load@v1
+      - name: Download GitVersion props artifact
+        uses: actions/download-artifact@v4
         with:
-          path: .env
+          name: gitversion-props
+          path: .
 
       - name: Run benchmarks
         run: |
@@ -134,16 +165,25 @@ jobs:
     if: success() && github.ref == 'refs/heads/master'
     container:
       image: ulfbou/dotnet-node:9.0
+    env:
+      PROJECT_ROOT: /github/workspace
+      SLN_FILE: ${{ env.PROJECT_ROOT }}/Async.Locks.sln
+      SRC_DIR: ${{ env.PROJECT_ROOT }}/Src
+      LOCKS_PROJECT_FILE: ${{ env.SRC_DIR }}/Async.Locks.csproj
+      TEST_DIR: ${{ env.PROJECT_ROOT }}/Tests
+      TESTS_PROJECT_FILE: ${{ env.TEST_DIR }}/Async.Locks.Tests.csproj
+      BENCHMARKS_DIR: ${{ env.PROJECT_ROOT }}/Benchmarks
+      BENCHMARKS_PROJECT_FILE: ${{ env.BENCHMARKS_DIR }}/Async.Locks.Benchmarks.csproj
+      BUILD_OUTPUT_DIR: ${{ env.PROJECT_ROOT }}/build-output
+      TEST_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/TestResults
+      BENCHMARK_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/benchmark-results
+      CODECOVERAGE_SETTINGS_FILE: ${{ env.PROJECT_ROOT }}/codecoverage.runsettings
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Load .env file
-        uses: jpfulton/github-action-dotenv-load@v1
-        with:
-          path: .env
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
