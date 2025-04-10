@@ -41,21 +41,13 @@ jobs:
         id: gitversion
         run: |
           echo "Current PATH: $PATH"
-          echo "Checking for dotnet-gitversion..."
-          if command -v dotnet-gitversion; then
-            echo "dotnet-gitversion found in PATH"
+          echo "Checking for dotnet-gitversion using 'dotnet tool run'..."
+          if dotnet tool run dotnet-gitversion --version; then
+            echo "dotnet-gitversion found and version displayed."
           else
-            echo "dotnet-gitversion NOT found in PATH"
-            echo "Adding local dotnet tools to PATH..."
-            export PATH="$PATH:/github/workspace/.dotnet/tools"
-            echo "Updated PATH: $PATH"
-            if command -v dotnet-gitversion; then
-              echo "dotnet-gitversion found in updated PATH"
-            else
-              echo "dotnet-gitversion STILL NOT found in PATH"
-            fi
+            echo "dotnet-gitversion NOT found using 'dotnet tool run'."
           fi
-          gitversion_output="$("dotnet-gitversion" /output json)"
+          gitversion_output="$("dotnet tool run dotnet-gitversion" /output json)"
           echo "GitVersion Output (JSON):"
           echo "$gitversion_output"
           echo "##[set-output name=major]::$(echo "$gitversion_output" | jq -r '.Major')"
