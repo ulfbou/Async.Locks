@@ -10,7 +10,10 @@ RUN apt-get update && apt-get install -y nodejs npm
 RUN apt-get update && apt-get install -y jq
 ENV PATH="/usr/local/bin:${PATH}"
 
-# Install GitVersion.Tool globally
+# Set the working directory
+WORKDIR /github/workspace
+
+# Install GitVersion.Tool globally within the container
 RUN dotnet tool install --global GitVersion.Tool
 
 # Download nuget.exe
@@ -21,8 +24,7 @@ RUN chmod +x /usr/local/bin/nuget.exe
 
 # Set environment variables for .NET SDK and tools
 ENV DOTNET_ROOT=/usr/share/dotnet
-ENV PATH="$PATH:$DOTNET_ROOT"
-ENV PATH="$PATH:$DOTNET_ROOT/tools"
+ENV PATH="$PATH:$DOTNET_ROOT:$DOTNET_ROOT/tools:/root/.dotnet/tools:/usr/local/bin"
 
 # Set environment variables for paths
 ENV PROJECT_ROOT=/github/workspace
@@ -35,9 +37,6 @@ ENV BUILD_OUTPUT_DIR=${PROJECT_ROOT}/build-output
 ENV BENCHMARK_RESULTS_DIR=${PROJECT_ROOT}/benchmark-results
 ENV UBUNTU_SCRIPTS_DIR=${PROJECT_ROOT}/scripts/ubuntu
 ENV SCRIPTS_DIR=${PROJECT_ROOT}/scripts
-
-# Set the working directory to /github/workspace to align with GitHub Actions
-WORKDIR /github/workspace
 
 # Copy the rest of your application code
 COPY . .
