@@ -406,3 +406,4 @@ gitversion.json
 gitversion.props
 # local-ci/
 # scripts/local/
+/build-output
