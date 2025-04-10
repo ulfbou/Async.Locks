@@ -13,17 +13,17 @@ jobs:
       image: ulfbou/dotnet-node:9.0
     env:
       PROJECT_ROOT: /github/workspace
-      SLN_FILE: ${{ env.PROJECT_ROOT }}/Async.Locks.sln
-      SRC_DIR: ${{ env.PROJECT_ROOT }}/Src
-      LOCKS_PROJECT_FILE: ${{ env.SRC_DIR }}/Async.Locks.csproj
-      TEST_DIR: ${{ env.PROJECT_ROOT }}/Tests
-      TESTS_PROJECT_FILE: ${{ env.TEST_DIR }}/Async.Locks.Tests.csproj
-      BENCHMARKS_DIR: ${{ env.PROJECT_ROOT }}/Benchmarks
-      BENCHMARKS_PROJECT_FILE: ${{ env.BENCHMARKS_DIR }}/Async.Locks.Benchmarks.csproj
-      BUILD_OUTPUT_DIR: ${{ env.PROJECT_ROOT }}/build-output
-      TEST_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/TestResults
-      BENCHMARK_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/benchmark-results
-      CODECOVERAGE_SETTINGS_FILE: ${{ env.PROJECT_ROOT }}/codecoverage.runsettings
+      SLN_FILE: /github/workspace/Async.Locks.sln
+      SRC_DIR: /github/workspace/Src
+      LOCKS_PROJECT_FILE: /github/workspace/Src/Async.Locks.csproj
+      TEST_DIR: /github/workspace/Tests
+      TESTS_PROJECT_FILE: /github/workspace/Tests/Async.Locks.Tests.csproj
+      BENCHMARKS_DIR: /github/workspace/Benchmarks
+      BENCHMARKS_PROJECT_FILE: /github/workspace/Benchmarks/Async.Locks.Benchmarks.csproj
+      BUILD_OUTPUT_DIR: /github/workspace/build-output
+      TEST_RESULTS_DIR: /github/workspace/TestResults
+      BENCHMARK_RESULTS_DIR: /github/workspace/benchmark-results
+      CODECOVERAGE_SETTINGS_FILE: /github/workspace/codecoverage.runsettings
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -89,17 +89,17 @@ jobs:
       image: ulfbou/dotnet-node:9.0
     env:
       PROJECT_ROOT: /github/workspace
-      SLN_FILE: ${{ env.PROJECT_ROOT }}/Async.Locks.sln
-      SRC_DIR: ${{ env.PROJECT_ROOT }}/Src
-      LOCKS_PROJECT_FILE: ${{ env.SRC_DIR }}/Async.Locks.csproj
-      TEST_DIR: ${{ env.PROJECT_ROOT }}/Tests
-      TESTS_PROJECT_FILE: ${{ env.TEST_DIR }}/Async.Locks.Tests.csproj
-      BENCHMARKS_DIR: ${{ env.PROJECT_ROOT }}/Benchmarks
-      BENCHMARKS_PROJECT_FILE: ${{ env.BENCHMARKS_DIR }}/Async.Locks.Benchmarks.csproj
-      BUILD_OUTPUT_DIR: ${{ env.PROJECT_ROOT }}/build-output
-      TEST_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/TestResults
-      BENCHMARK_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/benchmark-results
-      CODECOVERAGE_SETTINGS_FILE: ${{ env.PROJECT_ROOT }}/codecoverage.runsettings
+      SLN_FILE: /github/workspace/Async.Locks.sln
+      SRC_DIR: /github/workspace/Src
+      LOCKS_PROJECT_FILE: /github/workspace/Src/Async.Locks.csproj
+      TEST_DIR: /github/workspace/Tests
+      TESTS_PROJECT_FILE: /github/workspace/Tests/Async.Locks.Tests.csproj
+      BENCHMARKS_DIR: /github/workspace/Benchmarks
+      BENCHMARKS_PROJECT_FILE: /github/workspace/Benchmarks/Async.Locks.Benchmarks.csproj
+      BUILD_OUTPUT_DIR: /github/workspace/build-output
+      TEST_RESULTS_DIR: /github/workspace/TestResults
+      BENCHMARK_RESULTS_DIR: /github/workspace/benchmark-results
+      CODECOVERAGE_SETTINGS_FILE: /github/workspace/codecoverage.runsettings
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -126,17 +126,17 @@ jobs:
       image: ulfbou/dotnet-node:9.0
     env:
       PROJECT_ROOT: /github/workspace
-      SLN_FILE: ${{ env.PROJECT_ROOT }}/Async.Locks.sln
-      SRC_DIR: ${{ env.PROJECT_ROOT }}/Src
-      LOCKS_PROJECT_FILE: ${{ env.SRC_DIR }}/Async.Locks.csproj
-      TEST_DIR: ${{ env.PROJECT_ROOT }}/Tests
-      TESTS_PROJECT_FILE: ${{ env.TEST_DIR }}/Async.Locks.Tests.csproj
-      BENCHMARKS_DIR: ${{ env.PROJECT_ROOT }}/Benchmarks
-      BENCHMARKS_PROJECT_FILE: ${{ env.BENCHMARKS_DIR }}/Async.Locks.Benchmarks.csproj
-      BUILD_OUTPUT_DIR: ${{ env.PROJECT_ROOT }}/build-output
-      TEST_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/TestResults
-      BENCHMARK_RESULTS_DIR: ${{ env.PROJECT_ROOT }}/benchmark-results
-      CODECOVERAGE_SETTINGS_FILE: ${{ env.PROJECT_ROOT }}/codecoverage.runsettings
+      SLN_FILE: /github/workspace/Async.Locks.sln
+      SRC_DIR: /github/workspace/Src
+      LOCKS_PROJECT_FILE: /github/workspace/Src/Async.Locks.csproj
+      TEST_DIR: /github/workspace/Tests
+      TESTS_PROJECT_FILE: /github/workspace/Tests/Async.Locks.Tests.csproj
+      BENCHMARKS_DIR: /github/workspace/Benchmarks
+      BENCHMARKS_PROJECT_FILE: /github/workspace/Benchmarks/Async.Locks.Benchmarks.csproj
+      BUILD_OUTPUT_DIR: /github/workspace/build-output
+      TEST_RESULTS_DIR: /github/workspace/TestResults
+      BENCHMARK_RESULTS_DIR: /github/workspace/benchmark-results
+      CODECOVERAGE_SETTINGS_FILE: /github/workspace/codecoverage.runsettings
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
