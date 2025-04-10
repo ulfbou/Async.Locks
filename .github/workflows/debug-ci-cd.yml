@@ -37,6 +37,11 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
+      - name: Print dotnet-tools.json (Debug)
+        run: cat .config/dotnet-tools.json
+        working-directory: ${{ env.PROJECT_ROOT }}
+        shell: bash
+
       - name: Run GitVersion
         id: gitversion
         run: |
