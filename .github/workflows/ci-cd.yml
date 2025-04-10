@@ -19,11 +19,10 @@ jobs:
 
       - name: Load .env file
         run: |
-          if [ -f .env ]; then
-            echo "Loading .env file..."
-            set -a
-            source .env
-            set +a
+          if [ -f /github/workspace/.env ]; then
+            . /github/workspace/.env
+            echo "Environment variables loaded (attempted manually)"
+            echo "PROJECT_ROOT: $PROJECT_ROOT"
           else
             echo ".env file not found, skipping."
           fi
