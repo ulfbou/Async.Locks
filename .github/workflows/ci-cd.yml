@@ -18,9 +18,15 @@ jobs:
           fetch-depth: 0
 
       - name: Load .env file
-        uses: jpfulton/github-action-dotenv-load@v1
-        with:
-          path: .env
+        run: |
+          if [ -f .env ]; then
+            echo "Loading .env file..."
+            set -a
+            source .env
+            set +a
+          else
+            echo ".env file not found, skipping."
+          fi
 
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
