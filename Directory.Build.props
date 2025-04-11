@@ -50,8 +50,6 @@
 	<!-- RELEASE Configuration -->
 	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
 		<Optimize>true</Optimize>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
 		<DebugType>none</DebugType>
 	</PropertyGroup>
 

@@ -10,6 +10,7 @@
 		<RepositoryType>git</RepositoryType>
 		<PackageTags>async; lock; synchronization; semaphore; threading; concurrency</PackageTags>
 		<PackageReleaseNotes>See release notes at: https://github.com/ulfbou/Async.Locks/releases</PackageReleaseNotes>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
