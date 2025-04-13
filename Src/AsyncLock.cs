@@ -1,11 +1,5 @@
-﻿// Copyright (c) Async Framework projects. All rights reserved.
+// Copyright (c) Async Framework projects. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
-
-using Async.Locks.Events; // Ensure this using directive is present
-
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Async.Locks
 {
@@ -28,7 +22,7 @@ namespace Async.Locks
         {
             _semaphore = new SemaphoreSlim(1, 1);
             _defaultTimeout = defaultTimeout ?? Timeout.InfiniteTimeSpan;
-            _queueStrategy = queueStrategy ?? new AsyncPriorityQueueStrategy<int>(tcs => 0);
+            _queueStrategy = queueStrategy ?? new AsyncPriorityQueueStrategy<int>(tcs => 0); // Default priority strategy (FIFO)
         }
 
         /// <summary>
