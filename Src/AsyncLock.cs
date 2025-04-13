@@ -1,7 +1,11 @@
 ﻿// Copyright (c) Async Framework projects. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
-using System.Collections.Concurrent;
+using Async.Locks.Events; // Ensure this using directive is present
+
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Async.Locks
 {
@@ -11,25 +15,29 @@ namespace Async.Locks
     public class AsyncLock : AsyncLockBase, IAsyncLock
     {
         private readonly SemaphoreSlim _semaphore;
+        private readonly TimeSpan _defaultTimeout;
         private readonly IAsyncLockQueueStrategy _queueStrategy;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncLock"/> class.
         /// </summary>
-        /// <param name="queueStrategy">Optional queue strategy to use for managing lock requests.</param>
-        public AsyncLock(IAsyncLockQueueStrategy? queueStrategy = null, bool shouldMonitor = false) : base(shouldMonitor)
+        /// <param name="queueStrategy">Optional queue strategy to use for managing lock requests. Defaults to FIFO.</param>
+        /// <param name="defaultTimeout">Optional default timeout to use when acquiring the lock without specifying a timeout. Defaults to <see cref="Timeout.InfiniteTimeSpan"/>.</param>
+        /// <param name="shouldMonitor">Optional parameter indicating whether monitoring events should be raised. Defaults to <c>false</c>.</param>
+        public AsyncLock(IAsyncLockQueueStrategy? queueStrategy = null, TimeSpan? defaultTimeout = null, bool shouldMonitor = false) : base(shouldMonitor)
         {
             _semaphore = new SemaphoreSlim(1, 1);
-            _queueStrategy = queueStrategy ?? new AsyncPriorityQueueStrategy<int>(tcs => 0);    // Default priority strategy (FIFO)
+            _defaultTimeout = defaultTimeout ?? Timeout.InfiniteTimeSpan;
+            _queueStrategy = queueStrategy ?? new AsyncPriorityQueueStrategy<int>(tcs => 0);
         }
 
         /// <summary>
         /// Acquires the lock asynchronously.
         /// </summary>
-        /// <param name="timeout">Optional timeout for acquiring the lock.</param>
+        /// <param name="timeout">Optional timeout for acquiring the lock. If <c>null</c>, the <see cref="defaultTimeout"/> specified during construction will be used. To wait indefinitely, use <see cref="Timeout.InfiniteTimeSpan"/> or pass <c>null</c> when no <c>defaultTimeout</c> was provided.</param>
         /// <param name="cancellationToken">Optional cancellation token to cancel the operation.</param>
-        /// <returns>A <see cref="ValueTask{IAsyncDisposable}"/> that represents the acquisition of the lock.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if the timeout is less than zero.</exception>
+        /// <returns>A <see cref="ValueTask{IAsyncDisposable}"/> that represents the acquisition of the lock. The result of the task is an <see cref="IAsyncDisposable"/> that releases the lock when disposed.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if the provided timeout is less than zero.</exception>
         /// <exception cref="TimeoutException">Thrown if the lock acquisition times out.</exception>
         /// <exception cref="TaskCanceledException">Thrown if the lock acquisition is canceled.</exception>
         protected override async ValueTask<IAsyncDisposable> AcquireInternalAsync(TimeSpan? timeout, CancellationToken cancellationToken)
@@ -41,36 +49,30 @@ namespace Async.Locks
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                if (timeout.HasValue)
+                var actualTimeout = timeout ?? _defaultTimeout;
+
+                if (actualTimeout != Timeout.InfiniteTimeSpan && actualTimeout.TotalMilliseconds < 0)
                 {
-                    if (timeout.Value.TotalMilliseconds < 0)
-                    {
-                        throw new ArgumentOutOfRangeException(nameof(timeout), "Timeout must be greater than or equal to zero.");
-                    }
-
-                    if (await _semaphore.WaitAsync(timeout.Value, cancellationToken).ConfigureAwait(false))
-                    {
-                        _queueStrategy.TryDequeue(out _);
-                        InvokeLockAcquired();
-                        return new AsyncLockReleaser<AsyncLock>(this);
-                    }
-
-                    _queueStrategy.TryDequeue(out var dequeuedTcs);
-
-                    if (dequeuedTcs != null && dequeuedTcs == tcs)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
-                        InvokeLockTimeout();
-                        throw new TimeoutException("AsyncLock acquire timed out.");
-                    }
-
-                    return await tcs.Task;
+                    throw new ArgumentOutOfRangeException(nameof(timeout), "Timeout must be greater than or equal to zero.");
                 }
 
-                await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-                _queueStrategy.TryDequeue(out _);
-                InvokeLockAcquired();
-                return new AsyncLockReleaser<AsyncLock>(this);
+                if (await _semaphore.WaitAsync(actualTimeout, cancellationToken).ConfigureAwait(false))
+                {
+                    _queueStrategy.TryDequeue(out _);
+                    InvokeLockAcquired();
+                    return new AsyncLockReleaser<AsyncLock>(this);
+                }
+
+                _queueStrategy.TryDequeue(out var dequeuedTcs);
+
+                if (dequeuedTcs != null && dequeuedTcs == tcs)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    InvokeLockTimeout();
+                    throw new TimeoutException("AsyncLock acquire timed out.");
+                }
+
+                return await tcs.Task;
             }
             catch (OperationCanceledException)
             {
