@@ -20,6 +20,7 @@
 
 	<ItemGroup>
 		<!-- Package references specific to this project -->
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />
 		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
 		<PackageReference Include="Nullable" Version="1.3.0" PrivateAssets="all" Condition="'$(TargetFramework)' == 'net9.0'" />
 	</ItemGroup>
