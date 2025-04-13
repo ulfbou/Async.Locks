@@ -5,12 +5,10 @@ using Async.Locks.Events;
 
 namespace Async.Locks
 {
-    /// <summary>
-    /// A base class for implementing specialized asynchronous locks.
-    /// </summary>
     public abstract class AsyncLockBase : IAsyncLock, IDisposable
     {
         private int _disposed;
+        private readonly bool _shouldMonitor;
 
         /// <summary>
         /// Occurs when the lock is acquired.
@@ -20,52 +18,73 @@ namespace Async.Locks
         /// <summary>
         /// Occurs when the lock is released.
         /// </summary>
-
         public event Action? OnLockReleased;
+
         /// <summary>
         /// Occurs when the lock acquisition times out.
         /// </summary>
-
         public event Action? OnLockTimeout;
+
         /// <summary>
         /// Occurs when the lock acquisition is canceled.
         /// </summary>
         public event Action? OnLockCancelled;
 
         /// <summary>
-        /// Invokes the <see cref="OnLockAcquired"/> event.
+        /// Initializes a new instance of the <see cref="AsyncLockBase"/> class.
+        /// </summary>
+        /// <param name="shouldMonitor">Optional parameter indicating whether monitoring events should be raised. Defaults to <c>false</c>.</param>
+        protected AsyncLockBase(bool shouldMonitor = false)
+        {
+            _shouldMonitor = shouldMonitor;
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="OnLockAcquired"/> event and optionally logs a monitoring event.
         /// </summary>
         protected void InvokeLockAcquired()
         {
             OnLockAcquired?.Invoke();
-            AsyncLockEvents.Log.LockAcquired(Task.CurrentId ?? 0);
+            if (_shouldMonitor)
+            {
+                AsyncLockEvents.Log.LockAcquired(Task.CurrentId ?? 0);
+            }
         }
 
         /// <summary>
-        /// Invokes the <see cref="OnLockReleased"/> event.
+        /// Invokes the <see cref="OnLockReleased"/> event and optionally logs a monitoring event.
         /// </summary>
         protected void InvokeLockReleased()
         {
             OnLockReleased?.Invoke();
-            AsyncLockEvents.Log.LockReleased(Task.CurrentId ?? 0);
+            if (_shouldMonitor)
+            {
+                AsyncLockEvents.Log.LockReleased(Task.CurrentId ?? 0);
+            }
         }
 
         /// <summary>
-        /// Invokes the <see cref="OnLockTimeout"/> event.
+        /// Invokes the <see cref="OnLockTimeout"/> event and optionally logs a monitoring event.
         /// </summary>
         protected void InvokeLockTimeout()
         {
             OnLockTimeout?.Invoke();
-            AsyncLockEvents.Log.LockTimeout(Task.CurrentId ?? 0);
+            if (_shouldMonitor)
+            {
+                AsyncLockEvents.Log.LockTimeout(Task.CurrentId ?? 0);
+            }
         }
 
         /// <summary>
-        /// Invokes the <see cref="OnLockCancelled"/> event.
+        /// Invokes the <see cref="OnLockCancelled"/> event and optionally logs a monitoring event.
         /// </summary>
         protected void InvokeLockCancelled()
         {
             OnLockCancelled?.Invoke();
-            AsyncLockEvents.Log.LockCancelled(Task.CurrentId ?? 0);
+            if (_shouldMonitor)
+            {
+                AsyncLockEvents.Log.LockCancelled(Task.CurrentId ?? 0);
+            }
         }
 
         /// <summary>
