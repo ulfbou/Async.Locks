@@ -17,7 +17,7 @@ namespace Async.Locks
         /// Initializes a new instance of the <see cref="AsyncLock"/> class.
         /// </summary>
         /// <param name="queueStrategy">Optional queue strategy to use for managing lock requests.</param>
-        public AsyncLock(IAsyncLockQueueStrategy? queueStrategy = null)
+        public AsyncLock(IAsyncLockQueueStrategy? queueStrategy = null, bool shouldMonitor = false) : base(shouldMonitor)
         {
             _semaphore = new SemaphoreSlim(1, 1);
             _queueStrategy = queueStrategy ?? new AsyncPriorityQueueStrategy<int>(tcs => 0);    // Default priority strategy (FIFO)
