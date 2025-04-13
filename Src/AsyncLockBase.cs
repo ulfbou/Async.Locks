@@ -38,7 +38,7 @@ namespace Async.Locks
         protected void InvokeLockAcquired()
         {
             OnLockAcquired?.Invoke();
-            AsyncLockEvents.Log.LockAcquired(Task.CurrentId);
+            AsyncLockEvents.Log.LockAcquired(Task.CurrentId ?? 0);
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace Async.Locks
         protected void InvokeLockReleased()
         {
             OnLockReleased?.Invoke();
-            AsyncLockEvents.Log.LockReleased(Task.CurrentId);
+            AsyncLockEvents.Log.LockReleased(Task.CurrentId ?? 0);
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Async.Locks
         protected void InvokeLockTimeout()
         {
             OnLockTimeout?.Invoke();
-            AsyncLockEvents.Log.LockTimeout(Task.CurrentId);
+            AsyncLockEvents.Log.LockTimeout(Task.CurrentId ?? 0);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Async.Locks
         protected void InvokeLockCancelled()
         {
             OnLockCancelled?.Invoke();
-            AsyncLockEvents.Log.LockCancelled(Task.CurrentId);
+            AsyncLockEvents.Log.LockCancelled(Task.CurrentId ?? 0);
         }
 
         /// <summary>
