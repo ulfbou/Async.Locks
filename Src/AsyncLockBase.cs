@@ -1,6 +1,8 @@
 ﻿// Copyright (c) Async Framework projects. All rights reserved.
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
+using Async.Locks.Events;
+
 namespace Async.Locks
 {
     /// <summary>
@@ -33,22 +35,38 @@ namespace Async.Locks
         /// <summary>
         /// Invokes the <see cref="OnLockAcquired"/> event.
         /// </summary>
-        protected void InvokeLockAcquired() => OnLockAcquired?.Invoke();
+        protected void InvokeLockAcquired()
+        {
+            OnLockAcquired?.Invoke();
+            AsyncLockEvents.Log.LockAcquired(Task.CurrentId);
+        }
 
         /// <summary>
         /// Invokes the <see cref="OnLockReleased"/> event.
         /// </summary>
-        protected void InvokeLockReleased() => OnLockReleased?.Invoke();
+        protected void InvokeLockReleased()
+        {
+            OnLockReleased?.Invoke();
+            AsyncLockEvents.Log.LockReleased(Task.CurrentId);
+        }
 
         /// <summary>
         /// Invokes the <see cref="OnLockTimeout"/> event.
         /// </summary>
-        protected void InvokeLockTimeout() => OnLockTimeout?.Invoke();
+        protected void InvokeLockTimeout()
+        {
+            OnLockTimeout?.Invoke();
+            AsyncLockEvents.Log.LockTimeout(Task.CurrentId);
+        }
 
         /// <summary>
         /// Invokes the <see cref="OnLockCancelled"/> event.
         /// </summary>
-        protected void InvokeLockCancelled() => OnLockCancelled?.Invoke();
+        protected void InvokeLockCancelled()
+        {
+            OnLockCancelled?.Invoke();
+            AsyncLockEvents.Log.LockCancelled(Task.CurrentId);
+        }
 
         /// <summary>
         /// Asynchronously acquires the lock.
