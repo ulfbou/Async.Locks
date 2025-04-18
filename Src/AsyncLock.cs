@@ -6,109 +6,82 @@ namespace Async.Locks
     /// <summary>
     /// Represents an asynchronous lock that can be used to synchronize access to a resource.
     /// </summary>
-    public class AsyncLock : AsyncLockBase, IAsyncLock
+    public sealed class AsyncLock : IAsyncLock
     {
-        private readonly SemaphoreSlim _semaphore;
-        private readonly TimeSpan _defaultTimeout;
-        private readonly IAsyncLockQueueStrategy _queueStrategy;
+        private readonly AsyncLockCore _core;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncLock"/> class.
         /// </summary>
-        /// <param name="queueStrategy">Optional queue strategy to use for managing lock requests. Defaults to FIFO.</param>
-        /// <param name="defaultTimeout">Optional default timeout to use when acquiring the lock without specifying a timeout. Defaults to <see cref="Timeout.InfiniteTimeSpan"/>.</param>
-        /// <param name="shouldMonitor">Optional parameter indicating whether monitoring events should be raised. Defaults to <c>false</c>.</param>
-        public AsyncLock(IAsyncLockQueueStrategy? queueStrategy = null, TimeSpan? defaultTimeout = null, bool shouldMonitor = false) : base(shouldMonitor)
+        /// <param name="options">Optional configuration options for the lock.</param>
+        public AsyncLock(AsyncLockOptions? options = null)
         {
-            _semaphore = new SemaphoreSlim(1, 1);
-            _defaultTimeout = defaultTimeout ?? Timeout.InfiniteTimeSpan;
-            _queueStrategy = queueStrategy ?? new AsyncPriorityQueueStrategy<int>(tcs => 0); // Default priority strategy (FIFO)
+            _core = new AsyncLockCore(
+                options?.IsFair == true ? new AsyncFairQueueStrategy<TaskCompletionSource<AsyncLockReleaser>>() : new AsyncFairQueueStrategy<TaskCompletionSource<AsyncLockReleaser>>(),
+                options);
         }
 
         /// <summary>
         /// Acquires the lock asynchronously.
         /// </summary>
-        /// <param name="timeout">Optional timeout for acquiring the lock. If <c>null</c>, the <see cref="defaultTimeout"/> specified during construction will be used. To wait indefinitely, use <see cref="Timeout.InfiniteTimeSpan"/> or pass <c>null</c> when no <c>defaultTimeout</c> was provided.</param>
-        /// <param name="cancellationToken">Optional cancellation token to cancel the operation.</param>
-        /// <returns>A <see cref="ValueTask{IAsyncDisposable}"/> that represents the acquisition of the lock. The result of the task is an <see cref="IAsyncDisposable"/> that releases the lock when disposed.</returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if the provided timeout is less than zero.</exception>
-        /// <exception cref="TimeoutException">Thrown if the lock acquisition times out.</exception>
-        /// <exception cref="TaskCanceledException">Thrown if the lock acquisition is canceled.</exception>
-        protected override async ValueTask<IAsyncDisposable> AcquireInternalAsync(TimeSpan? timeout, CancellationToken cancellationToken)
+        public int WaitQueueLength => _core.WaitQueueLength;
+
+        /// <summary>
+        /// Gets the number of times the lock has been acquired.
+        /// </summary>
+        public long AcquisitionCount => _core.AcquisitionCount;
+
+        /// <summary>
+        /// Gets the number of times the lock has been released.
+        /// </summary>
+        public long ReleaseCount => _core.ReleaseCount;
+
+        /// <summary>
+        /// Occurs when the lock is acquired.
+        /// </summary>
+        public event Action? OnLockAcquired
         {
-            var tcs = new TaskCompletionSource<IAsyncDisposable>();
-            _queueStrategy.Enqueue(tcs);
-
-            try
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                var actualTimeout = timeout ?? _defaultTimeout;
-
-                if (actualTimeout != Timeout.InfiniteTimeSpan && actualTimeout.TotalMilliseconds < 0)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(timeout), "Timeout must be greater than or equal to zero.");
-                }
-
-                if (await _semaphore.WaitAsync(actualTimeout, cancellationToken).ConfigureAwait(false))
-                {
-                    _queueStrategy.TryDequeue(out _);
-                    InvokeLockAcquired();
-                    return new AsyncLockReleaser<AsyncLock>(this);
-                }
-
-                _queueStrategy.TryDequeue(out var dequeuedTcs);
-
-                if (dequeuedTcs != null && dequeuedTcs == tcs)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    InvokeLockTimeout();
-                    throw new TimeoutException("AsyncLock acquire timed out.");
-                }
-
-                return await tcs.Task;
-            }
-            catch (OperationCanceledException)
-            {
-                _queueStrategy.TryDequeue(out var dequeuedTcs);
-
-                if (dequeuedTcs != null && dequeuedTcs == tcs)
-                {
-                    InvokeLockCancelled();
-                    throw new TaskCanceledException();
-                }
-
-                return await tcs.Task;
-            }
+            add => _core.OnLockAcquired += value;
+            remove => _core.OnLockAcquired -= value;
         }
 
         /// <summary>
-        /// Releases the lock asynchronously.
+        /// Occurs when the lock is released.
         /// </summary>
-        /// <returns>A <see cref="ValueTask"/> that represents the asynchronous operation.</returns>
-        protected override ValueTask ReleaseInternalAsync()
+        public event Action? OnLockReleased
         {
-            _semaphore.Release();
-
-            if (_queueStrategy.TryDequeue(out var nextTcs))
-            {
-                nextTcs!.SetResult(new AsyncLockReleaser<AsyncLock>(this));
-            }
-
-            InvokeLockReleased();
-            return ValueTask.CompletedTask;
+            add => _core.OnLockReleased += value;
+            remove => _core.OnLockReleased -= value;
         }
 
         /// <summary>
-        /// Disposes the resources used by the <see cref="AsyncLock"/> class.
+        /// Occurs when the lock acquisition times out.
         /// </summary>
-        /// <param name="disposing">A boolean value indicating whether the method is being called from the Dispose method.</param>
-        protected override void Dispose(bool disposing)
+        public event Action? OnLockTimeout
         {
-            if (disposing)
-            {
-                _semaphore?.Dispose();
-            }
+            add => _core.OnLockTimeout += value;
+            remove => _core.OnLockTimeout -= value;
+        }
+
+        /// <summary>
+        /// Occurs when the lock acquisition is canceled.
+        /// </summary>
+        public event Action? OnLockCancelled
+        {
+            add => _core.OnLockCancelled += value;
+            remove => _core.OnLockCancelled -= value;
+        }
+
+        /// <inheritdoc />
+        public ValueTask<IAsyncDisposable> AcquireAsync(CancellationToken cancellationToken = default, TimeSpan? timeout = null)
+        {
+            return _core.AcquireAsync(cancellationToken, timeout);
+        }
+
+        /// <inheritdoc />
+        public ValueTask DisposeAsync()
+        {
+            return _core.DisposeAsync();
         }
     }
 }
