@@ -9,7 +9,17 @@ namespace Async.Locks
     {
         public static IServiceCollection AddAsyncLock(this IServiceCollection services, TimeSpan? defaultTimeout = null, ServiceLifetime lifetime = ServiceLifetime.Singleton)
         {
-            services.Add(new ServiceDescriptor(typeof(IAsyncLock), provider => new AsyncLock(defaultTimeout: defaultTimeout), lifetime));
+            var options = new AsyncLockOptions
+            {
+                DefaultTimeout = defaultTimeout ?? Timeout.InfiniteTimeSpan
+            };
+            services.Add(new ServiceDescriptor(typeof(IAsyncLock), provider => new AsyncLock(options), lifetime));
+            return services;
+        }
+
+        public static IServiceCollection AddAsyncLock(this IServiceCollection services, AsyncLockOptions options, ServiceLifetime lifetime = ServiceLifetime.Singleton)
+        {
+            services.Add(new ServiceDescriptor(typeof(IAsyncLock), provider => new AsyncLock(options), lifetime));
             return services;
         }
     }
