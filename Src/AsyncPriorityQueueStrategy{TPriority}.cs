@@ -16,6 +16,20 @@ namespace Async.Locks
         private readonly SortedDictionary<TPriority, Queue<TaskCompletionSource<IAsyncDisposable>>> _queues = new();
 
         /// <summary>
+        /// Gets the number of tasks waiting to acquire the lock.
+        /// </summary>
+        public int WaitQueueLength
+        {
+            get
+            {
+                lock (_queues)
+                {
+                    return _queues.Values.Sum(queue => queue.Count);
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the function used to select the priority for each item.
         /// </summary>
         /// <remarks>

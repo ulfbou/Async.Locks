@@ -14,6 +14,9 @@ namespace Async.Locks
         private readonly ConcurrentQueue<T> _queue = new();
 
         /// <inheritdoc />
+        public int WaitQueueLength => _queue.Count;
+
+        /// <inheritdoc />
         public void Enqueue(T item)
         {
             _queue.Enqueue(item);

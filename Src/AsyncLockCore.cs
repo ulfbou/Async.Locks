@@ -135,10 +135,6 @@ namespace Async.Locks
             {
                 dequeuedTcs!.TrySetResult(new AsyncLockReleaser(this));
             }
-            else
-            {
-                InvokeLockReleased();
-            }
 
             Interlocked.Increment(ref _lockReleaseCount);
             InvokeLockReleased();

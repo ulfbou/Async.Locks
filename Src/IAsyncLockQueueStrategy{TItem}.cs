@@ -11,6 +11,11 @@ namespace Async.Locks
     public interface IAsyncLockQueueStrategy<TItem> : IAsyncDisposable where TItem : notnull
     {
         /// <summary>
+        /// Gets the number of items currently in the queue.
+        /// </summary>
+        int WaitQueueLength { get; }
+
+        /// <summary>
         /// Enqueues a task completion source representing a lock acquisition request.
         /// </summary>
         /// <param name="tcs">The task completion source to enqueue.</param>

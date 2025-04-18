@@ -17,8 +17,8 @@ namespace Async.Locks
         public AsyncPriorityLock(Func<TaskCompletionSource<AsyncLockReleaser>, TPriority> prioritySelector, AsyncLockOptions? options = null)
         {
             _core = new AsyncLockCore(
-            new AsyncPriorityQueueStrategy<TPriority, TaskCompletionSource<AsyncLockReleaser>>(prioritySelector),
-            options);
+                new AsyncPriorityQueueStrategy<TPriority, TaskCompletionSource<AsyncLockReleaser>>(prioritySelector),
+                options);
         }
 
         /// <summary>

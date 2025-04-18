@@ -17,6 +17,18 @@ namespace Async.Locks
         private readonly SortedDictionary<TPriority, Queue<TItem>> _queues = new();
         private readonly Func<TItem, TPriority> _prioritySelector;
 
+        /// <inheritdoc />
+        public int WaitQueueLength
+        {
+            get
+            {
+                lock (_queues)
+                {
+                    return _queues.Values.Sum(queue => queue.Count);
+                }
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncPriorityQueueStrategy{TPriority, TItem}"/> class.
         /// </summary>
